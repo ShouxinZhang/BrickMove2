@@ -12,7 +12,8 @@ const mathProof = document.getElementById('mathProof');
 const leanCode = document.getElementById('leanCode');
 const openVsCodeButton = document.getElementById('openVsCode');
 const openVsCodeLink = document.getElementById('openVsCodeLink');
-const copyMarkdownButton = document.getElementById('copyMarkdown');
+const copyStatementButton = document.getElementById('copyStatement');
+const copyProofButton = document.getElementById('copyProof');
 const copyLeanButton = document.getElementById('copyLean');
 
 const state = {
@@ -88,27 +89,39 @@ nextEntryButton.addEventListener('click', () => {
   }
 });
 
-copyMarkdownButton?.addEventListener('click', async () => {
+copyStatementButton?.addEventListener('click', async () => {
   const entry = state.entries[state.selectedIndex];
   if (!entry) {
     setStatus('No entry selected.', true);
     return;
   }
-
   const stmt = (entry.data.informal_statement || '').trim();
-  const proof = (entry.data.informal_proof || '').trim();
-  let md = '';
-  if (stmt) md += '## Informal Statement\n\n' + stmt + '\n\n';
-  if (proof) md += '## Informal Proof\n\n' + proof + '\n';
-
-  if (!md.trim()) {
-    setStatus('Nothing to copy.', true);
+  if (!stmt) {
+    setStatus('No statement to copy.', true);
     return;
   }
-
   try {
-    await copyTextToClipboard(md);
-    setStatus('Copied Markdown to clipboard.');
+    await copyTextToClipboard(stmt);
+    // No success notice by request
+  } catch (_) {
+    setStatus('Copy failed.', true);
+  }
+});
+
+copyProofButton?.addEventListener('click', async () => {
+  const entry = state.entries[state.selectedIndex];
+  if (!entry) {
+    setStatus('No entry selected.', true);
+    return;
+  }
+  const proof = (entry.data.informal_proof || '').trim();
+  if (!proof) {
+    setStatus('No proof to copy.', true);
+    return;
+  }
+  try {
+    await copyTextToClipboard(proof);
+    // No success notice by request
   } catch (_) {
     setStatus('Copy failed.', true);
   }
