@@ -234,8 +234,12 @@ main {
 .lean-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 0.5rem;
+}
+
+.lean-header h2 {
+  margin-right: auto;
 }
 
 .lean-header button {
