@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lean Proof Viewer</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <h1>Lean Proof Viewer</h1>
+      <p class="subtitle">Drag a JSON file to preview math statements alongside Lean code.</p>
+    </header>
+
+    <main>
+      <section class="import-panel">
+        <div id="dropZone" class="drop-zone" tabindex="0">
+          <p class="drop-title">Drop JSON here</p>
+          <p class="drop-help">or <button id="pickFile" type="button" class="link-button">browse</button></p>
+          <input type="file" id="fileInput" accept="application/json,.json" hidden />
+        </div>
+        <div class="status-line" id="statusLine"></div>
+        <div class="entry-picker" id="entryPicker" hidden>
+          <label for="entrySelect">Entry</label>
+          <div class="entry-nav">
+            <button id="prevEntry" type="button" class="nav-button" aria-label="Previous entry">‹</button>
+            <span id="entryPosition" class="entry-position" aria-live="polite">0 / 0</span>
+            <button id="nextEntry" type="button" class="nav-button" aria-label="Next entry">›</button>
+          </div>
+          <select id="entrySelect"></select>
+        </div>
+      </section>
+
+      <section class="content-grid">
+        <article class="column math-column">
+          <div class="lean-header">
+            <h2>Math</h2>
+            <button id="copyMarkdown" type="button">Copy Markdown</button>
+          </div>
+          <div class="panel" id="mathStatement" aria-live="polite"></div>
+          <div class="panel" id="mathProof" aria-live="polite"></div>
+        </article>
+
+        <article class="column lean-column">
+          <div class="lean-header">
+            <h2>Lean</h2>
+            <button id="copyLean" type="button">Copy Lean</button>
+            <button id="openVsCode" type="button" disabled>Modify in VS Code</button>
+            <a id="openVsCodeLink" href="#" style="display:none" rel="noopener"></a>
+          </div>
+          <pre class="panel code-panel vscode-theme"><code id="leanCode" class="vscode-code"></code></pre>
+        </article>
+      </section>
+    </main>
+
+    <!-- MathJax for LaTeX rendering (optional; falls back gracefully if offline) -->
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          displayMath: [['$$', '$$'], ['\\[', '\\]']],
+          processEscapes: true,
+        },
+        options: {
+          skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+        },
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
