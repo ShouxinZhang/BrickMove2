@@ -83,7 +83,7 @@ function focusElement(element) {
     return;
   }
 
-  element.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  element.scrollIntoView({ block: 'center', behavior: 'auto' });
   try {
     element.focus({ preventScroll: true });
   } catch (error) {
