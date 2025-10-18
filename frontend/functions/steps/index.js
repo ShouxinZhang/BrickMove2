@@ -1,6 +1,6 @@
 import { stepsContainer, theoremTitle, theoremStatement } from '../dom.js';
 import { resetSteps } from '../state.js';
-import { createSubstepHtml } from './substepElements.js';
+import { createSubstepElement } from './substepElements.js';
 import { createStepElement, renumberSteps } from './stepElements.js';
 import { openStepJsonEditor } from './jsonEditor.js';
 
@@ -55,9 +55,8 @@ function handleStepAreaClick(event) {
   if (insertSubstepBtn) {
     const substepItem = insertSubstepBtn.closest('.substep-item');
     if (substepItem) {
-      const newSubstepDiv = document.createElement('div');
-      newSubstepDiv.innerHTML = createSubstepHtml();
-      substepItem.insertAdjacentElement('afterend', newSubstepDiv.firstElementChild);
+      const newSubstep = createSubstepElement();
+      substepItem.insertAdjacentElement('afterend', newSubstep);
       renderCallback();
       triggerRecompute();
     }
@@ -68,9 +67,8 @@ function handleStepAreaClick(event) {
   if (insertSubstepBeforeBtn) {
     const substepItem = insertSubstepBeforeBtn.closest('.substep-item');
     if (substepItem) {
-      const newSubstepDiv = document.createElement('div');
-      newSubstepDiv.innerHTML = createSubstepHtml();
-      substepItem.insertAdjacentElement('beforebegin', newSubstepDiv.firstElementChild);
+      const newSubstep = createSubstepElement();
+      substepItem.insertAdjacentElement('beforebegin', newSubstep);
       renderCallback();
       triggerRecompute();
       const focusTarget = substepItem.previousElementSibling?.querySelector('.substep-description');

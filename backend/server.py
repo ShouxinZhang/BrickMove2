@@ -8,13 +8,13 @@ Usage:
     Then open: http://localhost:5000
 """
 
-from flask import Flask, request, jsonify, send_from_directory
-from flask_cors import CORS
-import os
-import sys
-import json
 import re
 from pathlib import Path
+
+from flask import Flask, request, jsonify, send_from_directory
+from flask_cors import CORS
+
+from proof_markdown import build_markdown, validate_proof_json
 
 app = Flask(__name__, static_folder='../frontend')
 CORS(app)
@@ -229,33 +229,14 @@ def convert_json_to_md():
     try:
         data = request.get_json()
         
-        # Validate structure
-        if 'theorem_id' not in data or 'statement' not in data or 'steps' not in data:
-            return jsonify({'error': 'Invalid JSON structure'}), 400
-        
-        # Generate markdown
-        md_lines = []
-        md_lines.append(f"### 定理 {data['theorem_id']}\n")
-        md_lines.append(f"{data['statement']}\n")
-        md_lines.append("---\n")
-        md_lines.append("### 证明\n")
-        
-        for idx, step in enumerate(data['steps']):
-            step_num = idx + 1
-            step_header = f"### Step {step_num}"
-            
-            if 'title' in step and step['title'].strip():
-                step_header += f": {step['title'].strip()}"
-            
-            md_lines.append(f"{step_header}\n")
-            md_lines.append(f"{step.get('description', '').strip()}\n")
-            
-            if 'apis' in step and step['apis']:
-                api_list = [f"`{api.strip()}`" for api in step['apis'] if api.strip()]
-                if api_list:
-                    md_lines.append(f"API: {', '.join(api_list)}\n")
-        
-        markdown = '\n'.join(md_lines)
+        if not isinstance(data, dict):
+            return jsonify({'error': 'Invalid JSON payload'}), 400
+
+        errors = validate_proof_json(data)
+        if errors:
+            return jsonify({'error': 'Invalid JSON structure', 'details': errors}), 400
+
+        markdown = build_markdown(data)
         
         return jsonify({
             'success': True,

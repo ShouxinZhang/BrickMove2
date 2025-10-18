@@ -4,6 +4,10 @@ import { loadProofJson } from './steps/index.js';
 import { renderPreview } from './render.js';
 import { updateApiStats } from './api.js';
 
+let jsonPasteDialog = null;
+let jsonPasteForm = null;
+let jsonTextarea = null;
+
 export function initJsonLoader() {
   fileInput.addEventListener('change', handleProofJsonChange);
 }
@@ -36,96 +40,93 @@ function handleProofJsonChange(event) {
 }
 
 export function showJsonInputModal() {
-  const modal = document.createElement('div');
-  modal.style.cssText = `
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 10000;
-  `;
-  
-  const modalContent = document.createElement('div');
-  modalContent.style.cssText = `
-    background: white;
-    padding: 24px;
-    border-radius: 8px;
-    width: 90%;
-    max-width: 700px;
-    max-height: 80vh;
-    display: flex;
-    flex-direction: column;
-  `;
-  
-  modalContent.innerHTML = `
-    <h3 style="margin: 0 0 16px 0;">粘贴 JSON 内容</h3>
-    <textarea id="jsonTextInput" style="
-      flex: 1;
-      font-family: ui-monospace, monospace;
-      padding: 12px;
-      border: 1px solid #d1d5db;
-      border-radius: 4px;
-      resize: none;
-      min-height: 400px;
-    " placeholder='{
+  ensureDialog();
+  if (!jsonPasteDialog.open) {
+    jsonPasteDialog.showModal();
+    if (jsonTextarea) {
+      jsonTextarea.value = '';
+      requestAnimationFrame(() => jsonTextarea?.focus());
+    }
+  }
+}
+
+function ensureDialog() {
+  if (jsonPasteDialog) {
+    return;
+  }
+
+  jsonPasteDialog = document.createElement('dialog');
+  jsonPasteDialog.className = 'json-input-dialog';
+
+  const form = document.createElement('form');
+  form.className = 'json-input-form';
+  jsonPasteForm = form;
+
+  const title = document.createElement('h3');
+  title.textContent = '粘贴 JSON 内容';
+  form.appendChild(title);
+
+  jsonTextarea = document.createElement('textarea');
+  jsonTextarea.className = 'json-input-textarea';
+  jsonTextarea.placeholder = `{
   "theorem_id": "...",
   "statement": "...",
   "steps": [...]
-}'></textarea>
-    <div style="display: flex; gap: 8px; margin-top: 16px; justify-content: flex-end;">
-      <button id="cancelBtn" style="
-        padding: 8px 16px;
-        background: #9ca3af;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-      ">取消</button>
-      <button id="loadBtn" style="
-        padding: 8px 16px;
-        background: #3b82f6;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-      ">加载</button>
-    </div>
-  `;
-  
-  modal.appendChild(modalContent);
-  document.body.appendChild(modal);
-  
-  const textarea = document.getElementById('jsonTextInput');
-  const cancelBtn = document.getElementById('cancelBtn');
-  const loadBtn = document.getElementById('loadBtn');
-  
-  textarea.focus();
-  
-  cancelBtn.onclick = () => document.body.removeChild(modal);
-  modal.onclick = (e) => {
-    if (e.target === modal) document.body.removeChild(modal);
-  };
-  
-  loadBtn.onclick = () => {
-    const jsonText = textarea.value.trim();
-    if (!jsonText) {
-      alert('请输入 JSON 内容');
-      return;
-    }
-    
-    try {
-      const json = JSON.parse(jsonText);
-      loadProofJson(json);
-      updateApiStats();
-      document.body.removeChild(modal);
-    } catch (err) {
-      alert('解析 JSON 失败：' + err.message);
-    }
-  };
+}`;
+  form.appendChild(jsonTextarea);
+
+  const buttonRow = document.createElement('div');
+  buttonRow.className = 'json-input-actions';
+
+  const cancelBtn = document.createElement('button');
+  cancelBtn.type = 'button';
+  cancelBtn.textContent = '取消';
+  cancelBtn.className = 'json-input-cancel';
+
+  const loadBtn = document.createElement('button');
+  loadBtn.type = 'submit';
+  loadBtn.textContent = '加载';
+  loadBtn.className = 'json-input-confirm';
+
+  buttonRow.appendChild(cancelBtn);
+  buttonRow.appendChild(loadBtn);
+  form.appendChild(buttonRow);
+
+  form.addEventListener('submit', event => {
+    event.preventDefault();
+    handleJsonPasteSubmit();
+  });
+
+  cancelBtn.addEventListener('click', () => {
+    jsonPasteForm?.reset();
+    jsonPasteDialog.close();
+  });
+
+  jsonPasteDialog.addEventListener('cancel', () => {
+    jsonPasteForm?.reset();
+  });
+
+  jsonPasteDialog.appendChild(form);
+  document.body.appendChild(jsonPasteDialog);
 }
 
+function handleJsonPasteSubmit() {
+  if (!jsonTextarea) {
+    return;
+  }
+  const jsonText = jsonTextarea.value.trim();
+  if (!jsonText) {
+    alert('请输入 JSON 内容');
+    return;
+  }
+
+  try {
+    const json = JSON.parse(jsonText);
+    loadProofJson(json);
+    updateApiStats();
+    jsonPasteForm?.reset();
+    jsonPasteDialog.close();
+  } catch (err) {
+    alert('解析 JSON 失败：' + err.message);
+  }
+}

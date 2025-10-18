@@ -1,4 +1,4 @@
-import { createSubstepHtml } from './substepElements.js';
+import { createSubstepElement } from './substepElements.js';
 
 export function openStepJsonEditor(stepItem, handlers = {}) {
   const jsonData = getStepJsonData(stepItem);
@@ -127,7 +127,7 @@ function applyStepJsonData(stepItem, data) {
     }
   }
 
-  substepsContainer.innerHTML = '';
+  substepsContainer.replaceChildren();
 
   if (Array.isArray(data.substeps) && data.substeps.length > 0) {
     data.substeps.forEach(sub => {
@@ -139,9 +139,7 @@ function applyStepJsonData(stepItem, data) {
         ? sub.api1.join(', ')
         : (typeof sub?.api1 === 'string' ? sub.api1 : '');
 
-      const tempWrap = document.createElement('div');
-      tempWrap.innerHTML = createSubstepHtml(desc, api2Val, api1Val);
-      substepsContainer.appendChild(tempWrap.firstElementChild);
+      substepsContainer.appendChild(createSubstepElement(desc, api2Val, api1Val));
     });
   }
 }
