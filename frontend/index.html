@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Markdown 规范书写 · 预览</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+          onload="renderMathInElement(document.body, {delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+</head>
+<body>
+  <div id="app">
+    <div class="top-controls">
+      <button id="tocToggle" class="toc-toggle" type="button">目录</button>
+      <div class="api-summary">
+        <span class="api-summary-item">总 API: <strong id="apiTotalSummary">0</strong></span>
+        <span class="api-summary-item">唯一: <strong id="apiUniqueSummary">0</strong></span>
+        <button id="apiListToggle" class="api-list-toggle" type="button">查看 API 列表</button>
+      </div>
+    </div>
+    <header>
+      <h1>Markdown 规范书写 / 预览</h1>
+      <div class="actions">
+        <input type="file" id="fileInput" accept=".json" />
+        <label for="fileInput" class="file-label">Choose JSON File</label>
+        <button id="loadJsonBtn" class="load-json-btn">从文本加载JSON</button>
+        <button id="saveBtn">下载JSON</button>
+        <button id="exportCsvBtn" class="export-csv-btn">导出CSV</button>
+        <button id="exportMdBtn" class="export-md-btn">导出Markdown</button>
+      </div>
+    </header>
+    <main>
+      <aside id="tocPanel" class="toc-panel">
+        <div class="toc-header">
+          <span class="toc-title">目录</span>
+        </div>
+        <div class="toc-body">
+          <ul id="tocSteps" class="toc-step-list"></ul>
+        </div>
+      </aside>
+      <section class="editor">
+        <h2>Write (结构化输入)</h2>
+        <div class="form-section">
+          <label>定理 ID</label>
+          <input type="text" id="theoremTitle" placeholder="定理编号，如 100" />
+        </div>
+        <div class="form-section">
+          <label>定理陈述 (MathJax)</label>
+          <textarea id="theoremStatement" rows="3" placeholder="用 $...$ 和 $$...$$ 写数学公式"></textarea>
+        </div>
+        <div class="form-section">
+          <label>证明步骤</label>
+          <div id="stepsContainer"></div>
+        </div>
+        <div class="form-section api-stats">
+          <div class="stats-header">
+            <label>API 统计</label>
+          </div>
+          <div id="apiStatsDisplay" class="api-stats-display">
+            <div class="stat-item">
+              <span class="stat-label">总API数量:</span>
+              <span class="stat-value" id="totalApis">0</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">唯一API数量:</span>
+              <span class="stat-value" id="uniqueApis">0</span>
+            </div>
+          </div>
+          <div id="apiList" class="api-list-detail"></div>
+        </div>
+      </section>
+      <section class="preview">
+        <h2>Preview</h2>
+        <div id="preview"></div>
+      </section>
+    </main>
+    <footer>
+      <small>本工具用于规范化 md：左侧书写，右侧强制预览；保存将下载文件到本地。直接双击打开 index.html 即可使用。</small>
+    </footer>
+  </div>
+  <div id="apiModal" class="api-modal hidden" role="dialog" aria-modal="true" aria-labelledby="apiModalTitle">
+    <div class="api-modal-content">
+      <div class="api-modal-header">
+        <h3 id="apiModalTitle">唯一 API 列表</h3>
+        <button id="apiModalClose" class="api-modal-close" type="button" aria-label="关闭">×</button>
+      </div>
+      <div class="api-modal-body" id="apiModalBody"></div>
+    </div>
+  </div>
+  <script type="module" src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+{
+  "theorem_id": "YOUR_THEOREM_ID",
+  "statement": "定理的数学陈述（支持 MathJax，用 $...$ 或 $$...$$ 包裹公式）",
+  "steps": [
+    {
+      "title": "步骤的简短标题（可选）",
+      "description": "步骤的总体描述（可选）",
+      "substeps": [
+        {
+          "description": "子步骤1的详细描述，可以包含数学公式 $f(x) = x^2$。",
+          "api2": ["2分的api是可以直接exact掉陈述的api， 例如"],
+          "api1": ["1分的api是需要组合使用才能exact掉陈述的api"]
+        },
+        {
+          "description": "子步骤2的详细描述。",
+          "api2": ["API4"],
+          "api1": []
+        }
+      ]
+    },
+    {
+      "title": "另一个步骤",
+      "description": "这个步骤没有子步骤，使用旧格式也可以",
+      "apis": ["SomeAPI"]
+    },
+    {
+      "title": "最后一步",
+      "description": "完成证明。",
+      "substeps": [
+        {
+          "description": "最终论证。",
+          "api2": [],
+          "api1": ["FinalAPI"]
+        }
+      ]
+    }
+  ]
+}

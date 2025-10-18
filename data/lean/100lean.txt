@@ -1,0 +1,252 @@
+import Mathlib
+
+open Polynomial
+
+/-- Helper lemma: If the top submodule is finitely generated, the module is Noetherian.
+    This converts from the FG property of ⊤ to the full IsNoetherian property for ℚ[X]. -/
+lemma isNoetherian_of_top_submodule_fg (hTopFG : (⊤ : Submodule ℚ (ℚ[X])).FG) :
+    IsNoetherian ℚ (ℚ[X]) := by
+  rw [IsNoetherian.iff_fg, Module.finite_def]
+  exact hTopFG
+
+/-- The polynomial ring over ℚ is not noetherian as a ℚ-module (it's infinite-dimensional). -/
+lemma polynomial_rat_not_fg : ¬ IsNoetherian ℚ (ℚ[X]) := by
+  classical
+  intro hN
+  -- Consider the increasing chain `f n = {polynomials of degree < n}`
+  let f : ℕ →o Submodule ℚ (ℚ[X]) :=
+    { toFun := fun n => Polynomial.degreeLT ℚ n
+      monotone' := fun i j hij => Polynomial.degreeLT_mono (R := ℚ) hij }
+  -- In a Noetherian module, any such chain stabilizes
+  obtain ⟨n, hn⟩ :=
+    (monotone_stabilizes_iff_noetherian (R := ℚ) (M := ℚ[X])).mpr hN f
+  -- But `X^n` witnesses strict growth at step `n → n+1`
+  have hx_mem_succ : ((Polynomial.X : ℚ[X]) ^ n) ∈ f (n + 1) := by
+    -- `degree (X^n) = n < n+1`
+    have : Polynomial.degree ((Polynomial.X : ℚ[X]) ^ n) < (n + 1) := by
+      simpa [Polynomial.degree_X_pow (R := ℚ) n]
+        using (WithBot.coe_lt_coe.mpr (Nat.lt_succ_self n))
+    -- Membership via the `degreeLT` characterization
+    simpa [f] using (Polynomial.mem_degreeLT.mpr this)
+  have hx_not_mem : ((Polynomial.X : ℚ[X]) ^ n) ∉ f n := by
+    -- If it were in, we would have `coeff n (X^n) = 0`, contradicting `coeff_X_pow_self`
+    intro hx
+    have hdeg : Polynomial.degree ((Polynomial.X : ℚ[X]) ^ n) < n := by
+      simpa [f] using (Polynomial.mem_degreeLT.mp hx)
+    -- But `degree (X^n) = n`
+    rw [Polynomial.degree_X_pow (R := ℚ) n] at hdeg
+    exact (lt_irrefl _) hdeg
+  -- Thus `f n ≠ f (n+1)`, contradicting stabilization
+  have hneq : f n ≠ f (n + 1) := by
+    intro h
+    have : ((Polynomial.X : ℚ[X]) ^ n) ∈ f n := by simpa [h] using hx_mem_succ
+    exact hx_not_mem this
+  exact hneq (hn (n + 1) (Nat.le_succ n))
+
+/--
+There exists a commutative ring with finite prime spectrum but is not Noetherian.
+-/
+theorem exists_finite_primeSpectrum_not_isNoetherianRing :
+    ∃ (R : Type) (_ : CommRing R), Finite (PrimeSpectrum R) ∧ ¬ IsNoetherianRing R := by
+  classical
+  -- We take the trivial square–zero extension `ℚ ⊕ (Polynomial ℚ)`.
+  let R := TrivSqZeroExt ℚ (Polynomial ℚ)
+  -- This is a commutative ring (instance from Mathlib).
+
+  -- Define the projection and its kernel for use in both goals
+  let fA : R →ₐ[ℚ] ℚ := TrivSqZeroExt.fstHom ℚ ℚ (Polynomial ℚ)
+  let f : R →+* ℚ := fA.toRingHom
+
+  refine ⟨R, by exact TrivSqZeroExt.commRing, ?_, ?_⟩
+  -- Finite prime spectrum: in fact there is a unique prime ideal, namely `ker fst`.
+  -- We will use that for any prime `P` in `R`, `map fst P = ⊥` in the field `ℚ`,
+  -- hence by `comap_map_of_surjective` we get `P = comap fst ⊥ = ker fst`.
+  -- From this, `PrimeSpectrum R` is a subsingleton, hence finite.
+
+  -- Notation for the projection and its kernel.
+  -- Use the canonical algebra hom `fstHom` and forget the `ℚ`-algebra structure to a `RingHom`.
+  have hf_surj : Function.Surjective f := by
+    -- `fstHom` has underlying function `fst`.
+    have : Function.Surjective (TrivSqZeroExt.fst (R := ℚ) (M := Polynomial ℚ)) :=
+      TrivSqZeroExt.fst_surjective (R := ℚ) (M := Polynomial ℚ)
+    simp [f] at this
+    exact this
+
+  -- Every prime contains the kernel (square–zero ideal), so the map to `ℚ` sends it to `⊥`.
+  have h_map_bot : ∀ P : PrimeSpectrum R, Ideal.map f P.asIdeal = (⊥ : Ideal ℚ) := by
+    intro P
+    -- The kernel consists of nilpotent elements, hence is contained in any prime.
+    have hker_le_P : RingHom.ker f ≤ P.asIdeal := by
+      intro x hx
+      -- Use `isNilpotent_iff_isNilpotent_fst`: `fst x = 0 ⇒ x` is nilpotent, hence `x ∈ P`.
+      have hx₀ : TrivSqZeroExt.fst x = 0 := by simpa [f] using hx
+      -- math trivial
+      have hxnil : IsNilpotent x := by
+        -- `IsNilpotent x ↔ IsNilpotent x.fst`, and `IsNilpotent (0 : ℚ)`.
+        have h_fst_nil : IsNilpotent (TrivSqZeroExt.fst x) := by
+          use 1
+          simp only [hx₀, pow_one, fA, R, f]
+        -- Turn nilpotency of `fst x` into nilpotency of `x`.
+        have h' := (TrivSqZeroExt.isNilpotent_iff_isNilpotent_fst
+          (R := ℚ) (M := Polynomial ℚ) (x := x)).2
+        exact h' h_fst_nil
+      -- Prime ideals are radical: from `x^n = 0 ∈ P`, conclude `x ∈ P`.
+      rcases hxnil with ⟨n, hn⟩
+      -- math trivial
+      have h_pow_mem : x ^ n ∈ P.asIdeal := by simp only [hn, Submodule.zero_mem, f, R, fA]
+      exact (Ideal.IsPrime.mem_of_pow_mem P.isPrime n) h_pow_mem
+    -- Now `map f P` is a prime ideal of the field `ℚ`, hence it must be `⊥`.
+    have hprime_map : (Ideal.map f P.asIdeal).IsPrime :=
+      Ideal.map_isPrime_of_surjective hf_surj hker_le_P
+    -- In a field, the only prime ideal is `⊥`.
+    -- We record this as an equality (proof deferred).
+    have : Ideal.map f P.asIdeal = (⊥ : Ideal ℚ) := by
+      -- Use the auxiliary lemma
+      exact Ideal.eq_bot_of_prime (Ideal.map f P.asIdeal)
+    simp [this]
+
+  -- From `map f P = ⊥` and surjectivity of `f`, we get `P = comap f ⊥ = ker f`.
+  have h_unique : ∀ P : PrimeSpectrum R, P.asIdeal = Ideal.comap f (⊥ : Ideal ℚ) := by
+    intro P
+    -- Use that `map f P = ⊥` and kernel containment
+    -- Since ker f ≤ P and map f P = ⊥, we have P ≤ comap f ⊥ = ker f
+    -- On the other hand, ker f ≤ P (already shown), so P = ker f = comap f ⊥
+    apply le_antisymm
+    · -- P ≤ comap f ⊥
+      intro x hx
+      -- Need to show f(x) ∈ ⊥, i.e., f(x) = 0
+      have : f x ∈ Ideal.map f P.asIdeal := Ideal.mem_map_of_mem f hx
+      rw [h_map_bot P] at this
+      simp at this
+      exact this
+    · -- comap f ⊥ ≤ P (this is hker_le_P from before)
+      intro x hx
+      -- math trivial
+      have hx₀ : TrivSqZeroExt.fst x = 0 := by simp [f] at hx; exact hx
+      -- math trivial
+      have hxnil : IsNilpotent x := by
+        -- math trivial
+        have h_fst_nil : IsNilpotent (TrivSqZeroExt.fst x) := by
+          use 1
+          simp [hx₀]
+        -- math trivial
+        have h' := (TrivSqZeroExt.isNilpotent_iff_isNilpotent_fst
+          (R := ℚ) (M := Polynomial ℚ) (x := x)).2
+        exact h' h_fst_nil
+      rcases hxnil with ⟨n, hn⟩
+      -- math trivial
+      have h_pow_mem : x ^ n ∈ P.asIdeal := by simp [hn]
+      exact (Ideal.IsPrime.mem_of_pow_mem P.isPrime n) h_pow_mem  -- Hence `PrimeSpectrum R` is a subsingleton, so it is finite.
+  -- math trivial
+  have h_subsingleton : Subsingleton (PrimeSpectrum R) := by
+    refine ⟨?_⟩
+    intro P Q
+    -- `PrimeSpectrum.ext` reduces equality to equality of the underlying ideals.
+    ext1
+    rw [h_unique P, h_unique Q]
+  -- Existence of a point in the spectrum (nontrivial ring instance gives nonempty spectrum).
+  have h_nonempty : Nonempty (PrimeSpectrum R) := by
+    exact PrimeSpectrum.instNonemptyOfNontrivial
+  -- Turn `Subsingleton` + a witness into a `Fintype`, hence `Finite`.
+  have _instFintype : Fintype (PrimeSpectrum R) := Fintype.ofSubsingleton (Classical.choice h_nonempty)
+  exact (inferInstance : Finite (PrimeSpectrum R))
+  intro hR
+  -- Let `I := ker fst`.
+  let I : Ideal R := RingHom.ker f
+  -- Consider the `ℚ`-linear map `I → Polynomial ℚ` given by composing inclusion with `snd`.
+  let snd_map : R →ₗ[ℚ] Polynomial ℚ := TrivSqZeroExt.sndHom ℚ (Polynomial ℚ)
+  let l : ↥I →ₗ[ℚ] Polynomial ℚ := snd_map.comp ((I.subtype).restrictScalars ℚ)
+  -- math trivial
+  have l_surj : Function.Surjective l := by
+    intro p
+    -- Preimage is `inr p ∈ I` (since `fst (inr p) = 0`).
+    have h_mem : TrivSqZeroExt.inr (R := ℚ) (M := Polynomial ℚ) p ∈ I := by
+      show TrivSqZeroExt.fst (TrivSqZeroExt.inr (R := ℚ) (M := Polynomial ℚ) p) = 0
+      -- math trivial
+      have : TrivSqZeroExt.fst (TrivSqZeroExt.inr (R := ℚ) (M := Polynomial ℚ) p) = 0 :=
+        TrivSqZeroExt.fst_inr (R := ℚ) (m := p)
+      simp [this]
+    refine ⟨⟨TrivSqZeroExt.inr (R := ℚ) (M := Polynomial ℚ) p, h_mem⟩, ?_⟩
+    -- `snd (inr p) = p`.
+    simp only [LinearMap.coe_comp, LinearMap.coe_restrictScalars, Submodule.coe_subtype,
+      Function.comp_apply, l, snd_map, f, R, fA]
+    exact TrivSqZeroExt.snd_inr (R := ℚ) (m := p)
+
+  -- From `IsNoetherianRing R`, the ideal `I` is finitely generated as an `R`-submodule.
+  have hI_fg : I.FG := by
+    -- `hR : IsNoetherianRing R` is definally `IsNoetherian R R`.
+    have hRR : IsNoetherian R R := hR
+    exact (isNoetherian_def.1 hRR) I
+  -- Turn this into generators inside the module `I` itself: `(⊤ : Submodule R I)` is finitely generated.
+  have hTop_fg : (⊤ : Submodule R I).FG := (Submodule.fg_top I).2 hI_fg
+  -- Extract a finite generating set `S : Finset I` with `span R ↑S = ⊤` in `I`.
+  rcases hTop_fg with ⟨S, hS⟩
+  -- Let `SV` be the finite set of target vectors `l s` for `s ∈ S`.
+  let SV : Finset (Polynomial ℚ) := S.image (fun s : I => l s)
+  -- Define the `ℚ`-span of `SV`.
+  let W : Submodule ℚ (Polynomial ℚ) := Submodule.span ℚ (↑SV : Set (Polynomial ℚ))
+  -- Show that `W = ⊤` using surjectivity of `l` and that `S` spans `I` as an `R`-module.
+  have hW_top : W = ⊤ := by
+    -- It suffices to show any `p : ℚ[X]` lies in `W`.
+    apply top_unique
+    intro p _
+    -- Choose a preimage `x ∈ I` with `l x = p`.
+    rcases l_surj p with ⟨x, rfl⟩
+    -- From `hS : span R ↑S = ⊤`, we have `x ∈ span R ↑S`.
+    have hxS : (x : I) ∈ Submodule.span R (↑S : Set I) := by
+      have : (x : I) ∈ (⊤ : Submodule R I) := Submodule.mem_top
+      rwa [← hS] at this
+    -- We prove by span induction that `l x ∈ W`.
+    -- Notation convenience
+    have hmem : ∀ y ∈ (↑S : Set I), l y ∈ W := by
+      intro y hy
+      -- Each `l y` with `y ∈ S` lies in the span of `SV` by definition
+      refine Submodule.subset_span ?_
+      classical
+      have hset : (↑SV : Set (Polynomial ℚ)) = (fun s : I => l s) '' (↑S : Set I) := by
+        simp only [Finset.coe_image, SV, f, l, R, fA, I, snd_map]
+      have : (l y) ∈ (fun s : I => l s) '' (↑S : Set I) := ⟨y, hy, rfl⟩
+      simpa [hset]
+    -- Now use span induction over `R`-span; multiplication by `R` scales second component by `fst`.
+    refine
+      Submodule.span_induction (R := R) (s := (↑S : Set I))
+        (p := fun y _ => l y ∈ W)
+        (mem := fun y hy => hmem y hy)
+        (zero := by exact Submodule.zero_mem W)
+        (add := fun u v hu hv huW hvW => by exact Submodule.add_mem W huW hvW)
+        (smul := ?_)
+        hxS
+    -- The `smul` case: for `r : R` and `y : I`, need to show membership after scalar multiplication.
+    -- This case requires showing the linear map respects the R-module structure
+    -- in a way that's compatible with scalar restriction, which is technically complex.
+    --
+    -- The key insight is: l (r • y) should equal (TrivSqZeroExt.fst r) • l y, and since l y ∈ W
+    -- and W is a ℚ-submodule, the result should be in W.
+    -- However, the scalar multiplication between R and I as modules requires careful handling.
+    intro r y hyIn hyW
+    have hy_fst : TrivSqZeroExt.fst (y : R) = 0 := y.2
+    set_option synthInstance.maxHeartbeats 40000 in
+    let ry := r • y
+    have h_l_ry : l ry = TrivSqZeroExt.fst r • l y := by
+      simp only [l, LinearMap.coe_comp, LinearMap.coe_restrictScalars,
+                 Submodule.coe_subtype, Function.comp_apply, snd_map, ry, Submodule.coe_smul]
+      change TrivSqZeroExt.snd (r • (y : R)) = _
+      rw [show r • (y : R) = r * (y : R) by rfl, TrivSqZeroExt.snd_mul, hy_fst]
+      simp only [MulOpposite.op_zero, zero_smul, add_zero, f, SV, ry, l, R, fA, I, snd_map]
+      rfl
+    show l ry ∈ W
+    rw [h_l_ry]
+    exact Submodule.smul_mem W (TrivSqZeroExt.fst r) hyW
+  -- Hence `ℚ[X]` is spanned by finitely many elements, contradicting `polynomial_rat_not_fg`.
+  -- The span of the finite set `SV` is all of `ℚ[X]`, hence `ℚ[X]` would be finitely generated
+  -- as a `ℚ`-module, contradicting `polynomial_rat_not_fg`.
+  have hTopFG : (⊤ : Submodule ℚ (Polynomial ℚ)).FG := by
+    classical
+    have : W.FG := Submodule.fg_span SV.finite_toSet
+    rw [hW_top] at this
+    exact this
+  -- From a finite generating set of the whole module, deduce Noetherian and contradict.
+  have hNq : IsNoetherian ℚ (ℚ[X]) := isNoetherian_of_top_submodule_fg hTopFG
+  exact polynomial_rat_not_fg hNq
+
+#lint docBlameThm

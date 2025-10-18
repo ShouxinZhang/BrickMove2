@@ -1,0 +1,141 @@
+{
+  "theorem_id": "P3460_SO_odd_minus_one_det_zero",
+  "statement": "For a commutative ring $R$ where 2 is invertible, and for any natural number $n$, if $A$ is a special orthogonal matrix of size $(2n+1) \\times (2n+1)$, then $\\det(I - A) = 0$.",
+  "steps": [
+    {
+      "title": "利用特殊正交群的性质",
+      "description": "我们首先从矩阵 $A$ 属于特殊正交群 $SO(2n+1, R)$ 这一事实出发，提取出后续证明所需的两个关键属性。",
+      "substeps": [
+        {
+          "description": "矩阵 $A$ 属于正交群意味着它的转置 $A^T$ 是它的逆矩阵。这个性质由等式 $A^T A = I$ 来表达，其中 $I$ 是单位矩阵。",
+          "api2": [
+            "Matrix.mem_orthogonalGroup_iff'"
+          ],
+          "api1": []
+        },
+        {
+          "description": "矩阵 $A$ 的\"特殊\"之处在于其行列式的值必须为1，即 $\\det(A) = 1$。",
+          "api2": [],
+          "api1": []
+        }
+      ]
+    },
+    {
+      "title": "建立核心行列式方程",
+      "description": "本步骤的目标是通过一系列矩阵和行列式的代数运算，推导出一个关于 $\\det(I - A)$ 的核心方程。",
+      "substeps": [
+        {
+          "description": "我们从 $\\det(I - A)$ 开始。利用\"矩阵的行列式等于其转置的行列式\"这一基本性质，我们得到 $\\det(I - A) = \\det((I - A)^T)$。",
+          "api2": [
+            "Matrix.det_transpose"
+          ],
+          "api1": []
+        },
+        {
+          "description": "利用转置运算的线性性质，我们有 $(I - A)^T = I^T - A^T = I - A^T$。因此，上一步的等式变为 $\\det(I - A) = \\det(I - A^T)$。",
+          "api2": [],
+          "api1": [
+            "Matrix.transpose_sub",
+            "Matrix.transpose_one"
+          ]
+        },
+        {
+          "description": "接下来，我们通过直接的矩阵代数运算来寻找 $\\det(I - A^T)$ 与 $\\det(I - A)$ 的关系。我们证明一个关键的矩阵恒等式：$-A^T(I - A) = I - A^T$。这是通过展开左侧并利用 $A^T A = I$ 的性质得到的：$-A^T(I - A) = -A^T I + A^T A = -A^T + I = I - A^T$。",
+          "api2": [],
+          "api1": [
+            "Matrix.mul_sub",
+            "Matrix.mul_one",
+            "Matrix.neg_mul",
+            "sub_neg_eq_add"
+          ]
+        },
+        {
+          "description": "对这个恒等式 $-A^T(I - A) = I - A^T$ 两边同时取行列式，并利用行列式的乘法性质 $\\det(MN) = \\det(M)\\det(N)$，我们得到 $\\det(-A^T) \\det(I - A) = \\det(I - A^T)$。",
+          "api2": [
+            "Matrix.det_mul"
+          ],
+          "api1": []
+        },
+        {
+          "description": "现在，我们将之前得到的两个关于行列式的等式联立起来：$\\det(I - A) = \\det(I - A^T)$ 和 $\\det(I - A^T) = \\det(-A^T) \\det(I - A)$。由此我们得到了核心方程：$\\det(I - A) = \\det(-A^T) \\det(I - A)$。",
+          "api2": [],
+          "api1": []
+        }
+      ]
+    },
+    {
+      "title": "化简方程中的行列式因子",
+      "description": "我们对核心方程中的因子 $\\det(-A^T)$ 进行化简，使其变为一个简单的标量。",
+      "substeps": [
+        {
+          "description": "对于一个 $d \\times d$ 的矩阵 $M$，其行列式满足性质 $\\det(-M) = (-1)^d \\det(M)$。我们的矩阵维度是 $d=2n+1$，因此 $\\det(-A^T) = (-1)^{2n+1} \\det(A^T)$。",
+          "api2": [
+            "Matrix.det_neg"
+          ],
+          "api1": [
+            "Fintype.card_fin"
+          ]
+        },
+        {
+          "description": "再次使用 $\\det(M^T) = \\det(M)$ 的性质，我们有 $\\det(A^T) = \\det(A)$。因此，因子化简为 $\\det(-A^T) = (-1)^{2n+1} \\det(A)$。",
+          "api2": [
+            "Matrix.det_transpose"
+          ],
+          "api1": []
+        },
+        {
+          "description": "最后，我们代入之前从 $A$ 的\"特殊\"性得到的结论 $\\det(A)=1$。这使得因子最终化简为 $\\det(-A^T) = (-1)^{2n+1}$。",
+          "api2": [],
+          "api1": []
+        }
+      ]
+    },
+    {
+      "title": "求解方程并得出最终结论",
+      "description": "我们将化简后的因子代入核心方程，并利用环 $R$ 的性质来求解，最终证明 $\\det(I - A) = 0$。",
+      "substeps": [
+        {
+          "description": "将化简后的因子代入核心方程，我们得到 $\\det(I - A) = (-1)^{2n+1} \\det(I - A)$。",
+          "api2": [],
+          "api1": []
+        },
+        {
+          "description": "由于矩阵的维度 $2n+1$ 是一个奇数，我们有 $(-1)^{2n+1} = -1$。因此，方程变为 $\\det(I - A) = -\\det(I - A)$。",
+          "api2": [],
+          "api1": [
+            "pow_succ",
+            "pow_mul",
+            "neg_one_sq"
+          ]
+        },
+        {
+          "description": "为了方便书写，我们令 $x = \\det(I - A)$。现在的方程是 $x = -x$。通过将 $-x$ 移到等式左边，我们得到 $x + x = 0$，即 $2x = 0$。",
+          "api2": [],
+          "api1": [
+            "two_mul"
+          ]
+        },
+        {
+          "description": "根据定理的假设，环 $R$ 中的元素 2 是一个单位元，这意味着它存在一个乘法逆元，记为 $2^{-1}$。",
+          "api2": [],
+          "api1": []
+        },
+        {
+          "description": "我们将方程 $2x = 0$ 的两边同时左乘 $2^{-1}$，得到 $2^{-1}(2x) = 2^{-1} \\cdot 0$。利用乘法结合律，这可以写作 $(2^{-1} \\cdot 2)x = 0$，即 $1 \\cdot x = 0$，最终解得 $x=0$。",
+          "api2": [],
+          "api1": [
+            "Units.inv_mul",
+            "one_mul",
+            "mul_zero",
+            "mul_assoc"
+          ]
+        },
+        {
+          "description": "由于 $x$ 代表 $\\det(I - A)$，我们就此证明了 $\\det(I - A) = 0$。",
+          "api2": [],
+          "api1": []
+        }
+      ]
+    }
+  ]
+}
