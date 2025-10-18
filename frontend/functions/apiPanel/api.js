@@ -5,7 +5,7 @@ import {
   stepsContainer,
   apiTotalSummary,
   apiUniqueSummary
-} from './dom.js';
+} from '../core/dom.js';
 
 export function updateApiStats() {
   const allApis = [];

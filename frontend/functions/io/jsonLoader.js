@@ -1,8 +1,8 @@
-import { fileInput } from './dom.js';
-import { state } from './state.js';
-import { loadProofJson } from './steps/index.js';
-import { renderPreview } from './render.js';
-import { updateApiStats } from './api.js';
+import { fileInput } from '../core/dom.js';
+import { state } from '../core/state.js';
+import { loadProofJson } from '../steps/index.js';
+import { renderPreview } from '../render.js';
+import { updateApiStats } from '../apiPanel/api.js';
 
 let jsonPasteDialog = null;
 let jsonPasteForm = null;

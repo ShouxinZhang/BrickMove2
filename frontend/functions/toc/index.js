@@ -1,6 +1,6 @@
 import Sortable from 'https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/modular/sortable.esm.js';
 import { renumberSteps } from '../steps/stepElements.js';
-import { nextSubstepId } from '../state.js';
+import { nextSubstepId } from '../core/state.js';
 
 let toggleButton = null;
 let panelElement = null;

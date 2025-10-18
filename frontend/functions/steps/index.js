@@ -1,5 +1,5 @@
-import { stepsContainer, theoremTitle, theoremStatement } from '../dom.js';
-import { resetSteps } from '../state.js';
+import { stepsContainer, theoremTitle, theoremStatement } from '../core/dom.js';
+import { resetSteps } from '../core/state.js';
 import { createSubstepElement } from './substepElements.js';
 import { createStepElement, renumberSteps } from './stepElements.js';
 import { openStepJsonEditor } from './jsonEditor.js';

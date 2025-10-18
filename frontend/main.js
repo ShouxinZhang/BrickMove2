@@ -13,18 +13,18 @@ import {
   apiListToggle,
   apiTotalSummary,
   apiUniqueSummary
-} from './functions/dom.js';
+} from './functions/core/dom.js';
 import { initSteps, addStep } from './functions/steps/index.js';
 import { renderPreview } from './functions/render.js';
-import { initJsonLoader, showJsonInputModal } from './functions/jsonLoader.js';
-import { enableDragAndDrop } from './functions/dragDrop.js';
-import { initSaveHandler } from './functions/save.js';
-import { initCsvExport } from './functions/csv.js';
-import { initMarkdownExport } from './functions/markdownExport.js';
+import { initJsonLoader, showJsonInputModal } from './functions/io/jsonLoader.js';
+import { enableDragAndDrop } from './functions/core/dragDrop.js';
+import { initSaveHandler } from './functions/io/save.js';
+import { initCsvExport } from './functions/io/csv.js';
+import { initMarkdownExport } from './functions/io/markdownExport.js';
 import { initPreviewInteractions } from './functions/previewSync/index.js';
 import { initToc, refreshToc } from './functions/toc/index.js';
-import { updateApiStats } from './functions/api.js';
-import { initApiModal, refreshApiModalContent } from './functions/modal.js';
+import { updateApiStats } from './functions/apiPanel/api.js';
+import { initApiModal, refreshApiModalContent } from './functions/apiPanel/modal.js';
 
 marked.setOptions({
   gfm: true,

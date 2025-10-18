@@ -1,4 +1,4 @@
-import { preview } from './dom.js';
+import { preview } from './core/dom.js';
 import { collectData } from './steps/index.js';
 import {
   buildMarkdownWithSegments,

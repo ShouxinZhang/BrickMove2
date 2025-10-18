@@ -1,5 +1,5 @@
-import { exportCsvBtn } from './dom.js';
-import { collectData } from './steps/index.js';
+import { exportCsvBtn } from '../core/dom.js';
+import { collectData } from '../steps/index.js';
 
 export function initCsvExport() {
   exportCsvBtn.addEventListener('click', exportToCsv);

@@ -1,4 +1,4 @@
-import { nextSubstepId } from '../state.js';
+import { nextSubstepId } from '../core/state.js';
 
 export function createSubstepElement(description = '', api2 = '', api1 = '', substepId) {
   const id = substepId || nextSubstepId();

@@ -5,7 +5,7 @@ import {
   apiModalClose,
   apiModalBody,
   apiListDiv
-} from './dom.js';
+} from '../core/dom.js';
 
 let isOpen = false;
 let keydownHandlerAttached = false;

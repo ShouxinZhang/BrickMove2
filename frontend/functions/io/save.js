@@ -1,7 +1,7 @@
-import { saveBtn } from './dom.js';
-import { state } from './state.js';
-import { collectData } from './steps/index.js';
-import { generateMarkdown } from './render.js';
+import { saveBtn } from '../core/dom.js';
+import { state } from '../core/state.js';
+import { collectData } from '../steps/index.js';
+import { generateMarkdown } from '../render.js';
 
 export function initSaveHandler() {
   saveBtn.addEventListener('click', handleSave);

@@ -2,7 +2,7 @@ import {
   theoremTitle,
   theoremStatement,
   stepsContainer
-} from '../dom.js';
+} from '../core/dom.js';
 
 export function focusSegmentSource(segment) {
   if (!segment || !segment.source) {

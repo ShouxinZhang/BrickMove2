@@ -1,5 +1,5 @@
-import { collectData } from './steps/index.js';
-import { generateMarkdown } from './render.js';
+import { collectData } from '../steps/index.js';
+import { generateMarkdown } from '../render.js';
 
 export function initMarkdownExport(button) {
   if (!button) {

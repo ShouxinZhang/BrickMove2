@@ -1,4 +1,4 @@
-import { state } from '../state.js';
+import { state } from '../core/state.js';
 import { createSubstepElement } from './substepElements.js';
 
 export function createStepElement(stepText = '', apiText = '', stepTitle = '', substeps = []) {
