@@ -1,4 +1,4 @@
-import { stepsContainer, theoremTitle, theoremStatement } from '../core/dom.js';
+import { stepsContainer, theoremTitle, theoremStatement, theoremSymbols } from '../core/dom.js';
 import { resetSteps } from '../core/state.js';
 import { createSubstepElement } from './substepElements.js';
 import { createStepElement, renumberSteps } from './stepElements.js';
@@ -93,8 +93,8 @@ function handleStepAreaClick(event) {
   }
 }
 
-export function addStep(stepText = '', apiText = '', stepTitle = '', substeps = []) {
-  const stepDiv = createStepElement(stepText, apiText, stepTitle, substeps);
+export function addStep(stepText = '', apiText = '', stepTitle = '', substeps = [], symbols = '') {
+  const stepDiv = createStepElement(stepText, apiText, stepTitle, substeps, symbols);
   stepsContainer.appendChild(stepDiv);
   renderCallback();
   triggerRecompute();
@@ -133,13 +133,18 @@ export function loadProofJson(data) {
   resetSteps();
   theoremTitle.value = data.theorem_id || '';
   theoremStatement.value = data.statement || '';
+  if (theoremSymbols) {
+    const tSymbols = Array.isArray(data.symbols) ? data.symbols.join(', ') : (data.symbols || '');
+    theoremSymbols.value = tSymbols;
+  }
 
   let addedAny = false;
   if (Array.isArray(data.steps) && data.steps.length > 0) {
     data.steps.forEach(step => {
       const apiStr = Array.isArray(step.apis) ? step.apis.join(', ') : (step.api || '');
       const substeps = step.substeps || [];
-      addStep(step.description || '', apiStr, step.title || '', substeps);
+      const stepSymbols = Array.isArray(step.symbols) ? step.symbols.join(', ') : (step.symbols || '');
+      addStep(step.description || '', apiStr, step.title || '', substeps, stepSymbols);
     });
     addedAny = true;
   }
@@ -154,17 +159,20 @@ export function collectData() {
     const stepTitleInput = step.querySelector('.step-title-input');
     const stepDescription = step.querySelector('.step-description');
     const legacyApiInput = step.querySelector('.step-api-legacy');
+    const stepSymbolsInput = step.querySelector('.step-symbols');
 
     const substeps = [];
     step.querySelectorAll('.substep-item').forEach(substepItem => {
       const substepDesc = substepItem.querySelector('.substep-description');
       const substepApi2 = substepItem.querySelector('.substep-api-2');
       const substepApi1 = substepItem.querySelector('.substep-api-1');
+      const substepSymbols = substepItem.querySelector('.substep-symbols');
 
       substeps.push({
         description: substepDesc.value.trim(),
         api2: substepApi2.value.trim(),
-        api1: substepApi1.value.trim()
+        api1: substepApi1.value.trim(),
+        symbols: substepSymbols ? substepSymbols.value.trim() : ''
       });
     });
 
@@ -172,13 +180,15 @@ export function collectData() {
       title: stepTitleInput.value.trim(),
       step: stepDescription.value.trim(),
       api: legacyApiInput.value.trim(),
-      substeps
+      substeps,
+      symbols: stepSymbolsInput ? stepSymbolsInput.value.trim() : ''
     });
   });
 
   return {
     title: theoremTitle.value.trim(),
     statement: theoremStatement.value.trim(),
+    symbols: theoremSymbols ? theoremSymbols.value.trim() : '',
     steps
   };
 }

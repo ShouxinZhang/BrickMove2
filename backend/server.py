@@ -15,11 +15,21 @@ from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 
 from proof_markdown import build_markdown, validate_proof_json
+from markdown_to_json import markdown_to_json, MarkdownParseError
+from csv_storage import (
+    CsvStorageError,
+    save_csv_file,
+    get_default_directory,
+    save_csv_content,
+    save_md_content,
+    save_json_content,
+)
 
 app = Flask(__name__, static_folder='../frontend')
 CORS(app)
 
 BASE_DIR = Path(__file__).parent.parent
+DEFAULT_CSV_DIR = get_default_directory(BASE_DIR)
 
 
 def is_likely_api(name):
@@ -223,6 +233,127 @@ def extract_apis():
         return jsonify({'error': str(e)}), 500
 
 
+@app.route('/api/upload-csv', methods=['POST'])
+def upload_csv():
+    """Save uploaded CSV files into the workspace csv_save directory."""
+    uploaded = request.files.get('file')
+    if uploaded is None or not uploaded.filename:
+        return jsonify({'error': 'No file provided'}), 400
+
+    requested_dir = request.form.get('target_dir') or request.args.get('target_dir')
+
+    try:
+        saved_path = save_csv_file(uploaded, BASE_DIR, requested_dir)
+    except CsvStorageError as exc:
+        return jsonify({'error': str(exc)}), 400
+    except Exception as exc:  # Unexpected errors
+        return jsonify({'error': str(exc)}), 500
+
+    try:
+        relative_path = saved_path.relative_to(BASE_DIR)
+    except ValueError:
+        relative_path = saved_path
+
+    return jsonify({
+        'success': True,
+        'path': str(relative_path),
+        'absolute_path': str(saved_path),
+        'default_directory': str(DEFAULT_CSV_DIR),
+        'requested_directory': requested_dir
+    })
+
+
+@app.route('/api/save-csv-content', methods=['POST'])
+def save_csv_content_api():
+    """Save CSV content posted from the client directly to disk."""
+    try:
+        payload = request.get_json()
+        if not isinstance(payload, dict):
+            return jsonify({'error': 'Invalid JSON payload'}), 400
+
+        content = payload.get('content')
+        if not isinstance(content, str):
+            return jsonify({'error': 'Field "content" (string) is required'}), 400
+
+        filename = payload.get('filename')
+        requested_dir = payload.get('target_dir') or payload.get('directory')
+        overwrite = bool(payload.get('overwrite', False))
+
+        saved_path = save_csv_content(
+            content,
+            BASE_DIR,
+            filename=filename,
+            requested_directory=requested_dir,
+            overwrite=overwrite,
+        )
+
+        try:
+            relative_path = saved_path.relative_to(BASE_DIR)
+        except ValueError:
+            relative_path = saved_path
+
+        return jsonify({
+            'success': True,
+            'path': str(relative_path),
+            'absolute_path': str(saved_path),
+            'default_directory': str(DEFAULT_CSV_DIR),
+            'requested_directory': requested_dir
+        })
+    except CsvStorageError as exc:
+        return jsonify({'error': str(exc)}), 400
+    except Exception as exc:
+        return jsonify({'error': str(exc)}), 500
+
+
+@app.route('/api/save-md-content', methods=['POST'])
+def save_md_content_api():
+    try:
+        payload = request.get_json()
+        if not isinstance(payload, dict):
+            return jsonify({'error': 'Invalid JSON payload'}), 400
+        content = payload.get('content')
+        if not isinstance(content, str):
+            return jsonify({'error': 'Field "content" (string) is required'}), 400
+        filename = payload.get('filename')
+        requested_dir = payload.get('target_dir') or payload.get('directory')
+        overwrite = bool(payload.get('overwrite', False))
+        saved_path = save_md_content(content, BASE_DIR, filename, requested_dir, overwrite)
+        try:
+            relative_path = saved_path.relative_to(BASE_DIR)
+        except ValueError:
+            relative_path = saved_path
+        return jsonify({'success': True, 'path': str(relative_path), 'absolute_path': str(saved_path)})
+    except CsvStorageError as exc:
+        return jsonify({'error': str(exc)}), 400
+    except Exception as exc:
+        return jsonify({'error': str(exc)}), 500
+
+
+@app.route('/api/save-json-content', methods=['POST'])
+def save_json_content_api():
+    try:
+        payload = request.get_json()
+        if not isinstance(payload, dict):
+            return jsonify({'error': 'Invalid JSON payload'}), 400
+        # Accept "json" or "content"
+        content = payload.get('json', payload.get('content'))
+        if content is None:
+            return jsonify({'error': 'Field "json" or "content" is required'}), 400
+        filename = payload.get('filename')
+        requested_dir = payload.get('target_dir') or payload.get('directory')
+        overwrite = bool(payload.get('overwrite', False))
+        saved_path = save_json_content(content, BASE_DIR, filename, requested_dir, overwrite)
+        try:
+            relative_path = saved_path.relative_to(BASE_DIR)
+        except ValueError:
+            relative_path = saved_path
+        return jsonify({'success': True, 'path': str(relative_path), 'absolute_path': str(saved_path)})
+    except CsvStorageError as exc:
+        return jsonify({'error': str(exc)}), 400
+    except Exception as exc:
+        return jsonify({'error': str(exc)}), 500
+
+
 @app.route('/api/convert-json-to-md', methods=['POST'])
 def convert_json_to_md():
     """Convert proof JSON to Markdown."""
@@ -243,6 +374,99 @@ def convert_json_to_md():
             'markdown': markdown
         })
     
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/convert-md-to-json', methods=['POST'])
+def convert_md_to_json():
+    """Convert proof Markdown (generated by this tool) back to JSON."""
+    try:
+        payload = request.get_json()
+        if not isinstance(payload, dict) or 'markdown' not in payload:
+            return jsonify({'error': "请求体必须包含 'markdown' 字段"}), 400
+
+        markdown_text = payload['markdown']
+        try:
+            proof_json = markdown_to_json(markdown_text)
+        except MarkdownParseError as exc:
+            return jsonify({'error': 'Markdown 解析失败', 'details': str(exc)}), 400
+
+        errors = validate_proof_json(proof_json)
+        if errors:
+            return jsonify({'error': 'Invalid JSON structure', 'details': errors}), 400
+
+        return jsonify({'success': True, 'proof': proof_json})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+def _resolve_dir(requested_dir: str | None) -> Path:
+    if requested_dir:
+        d = Path(requested_dir).expanduser()
+        if not d.is_absolute():
+            d = (BASE_DIR / d).resolve()
+    else:
+        d = DEFAULT_CSV_DIR
+    d.mkdir(parents=True, exist_ok=True)
+    return d
+
+
+@app.route('/api/list-files', methods=['GET'])
+def list_files_generic():
+    try:
+        requested_dir = request.args.get('dir')
+        exts = request.args.get('exts', '.json,.md,.csv')
+        limit = int(request.args.get('limit', '500'))
+
+        target_dir = _resolve_dir(requested_dir)
+        allowed = {e.strip().lower() for e in exts.split(',') if e.strip()}
+
+        items = []
+        for p in target_dir.iterdir():
+            if not p.is_file():
+                continue
+            if allowed and p.suffix.lower() not in allowed:
+                continue
+            stat = p.stat()
+            try:
+                rel = p.relative_to(BASE_DIR)
+                rel_str = str(rel)
+            except Exception:
+                rel_str = str(p)
+            items.append({
+                'name': p.name,
+                'ext': p.suffix.lower(),
+                'size': stat.st_size,
+                'mtime': stat.st_mtime,
+                'path': rel_str
+            })
+        items.sort(key=lambda x: x['mtime'], reverse=True)
+        if limit:
+            items = items[:limit]
+        return jsonify({'success': True, 'dir': str(target_dir), 'items': items})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/read-file', methods=['GET'])
+def read_file_generic():
+    try:
+        path_param = request.args.get('path')
+        if not path_param:
+            return jsonify({'error': 'path is required'}), 400
+        p = Path(path_param).expanduser()
+        if not p.is_absolute():
+            p = (BASE_DIR / p).resolve()
+        if not p.exists() or not p.is_file():
+            return jsonify({'error': 'file not found'}), 404
+        text = p.read_text(encoding='utf-8')
+        try:
+            rel = p.relative_to(BASE_DIR)
+            rel_str = str(rel)
+        except Exception:
+            rel_str = str(p)
+        return jsonify({'success': True, 'path': rel_str, 'absolute_path': str(p), 'content': text, 'ext': p.suffix.lower()})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 

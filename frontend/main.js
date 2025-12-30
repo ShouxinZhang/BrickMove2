@@ -25,6 +25,8 @@ import { initPreviewInteractions } from './functions/previewSync/index.js';
 import { initToc, refreshToc } from './functions/toc/index.js';
 import { updateApiStats } from './functions/apiPanel/api.js';
 import { initApiModal, refreshApiModalContent } from './functions/apiPanel/modal.js';
+import { initCsvSettings } from './functions/settings/index.js';
+import { loadCsvTargetDir } from './shared/csvTargetDir.js';
 
 marked.setOptions({
   gfm: true,
@@ -46,6 +48,8 @@ initJsonLoader();
 initSaveHandler();
 initCsvExport();
 initMarkdownExport(exportMdBtn);
+loadCsvTargetDir();
+initCsvSettings();
 initToc({
   toggle: tocToggle,
   panel: tocPanel,
@@ -72,6 +76,11 @@ if (loadJsonBtn) {
 
 theoremTitle.addEventListener('input', syncOutputs);
 theoremStatement.addEventListener('input', syncOutputs);
+// theoremSymbols does not affect Markdown preview today, but include for IO consistency
+const _theoremSymbolsEl = document.getElementById('theoremSymbols');
+if (_theoremSymbolsEl) {
+  _theoremSymbolsEl.addEventListener('input', () => {});
+}
 stepsContainer.addEventListener('input', syncOutputs);
 
 [fileInput].forEach(enableDragAndDrop);

@@ -59,10 +59,12 @@ function getStepJsonData(stepItem) {
   const titleInput = stepItem.querySelector('.step-title-input');
   const descriptionInput = stepItem.querySelector('.step-description');
   const legacyApiInput = stepItem.querySelector('.step-api-legacy');
+  const stepSymbolsInput = stepItem.querySelector('.step-symbols');
 
   const title = titleInput?.value.trim();
   const desc = descriptionInput?.value.trim();
   const legacyApis = legacyApiInput?.value.trim();
+  const stepSymbols = stepSymbolsInput?.value.trim();
 
   if (title) {
     data.title = title;
@@ -70,12 +72,16 @@ function getStepJsonData(stepItem) {
   if (desc) {
     data.description = desc;
   }
+  if (stepSymbols) {
+    data.symbols = stepSymbols.split(',').map(x => x.trim()).filter(Boolean);
+  }
 
   const substeps = [];
   stepItem.querySelectorAll('.substep-item').forEach(substepItem => {
     const subDesc = substepItem.querySelector('.substep-description')?.value.trim();
     const api2Str = substepItem.querySelector('.substep-api-2')?.value || '';
     const api1Str = substepItem.querySelector('.substep-api-1')?.value || '';
+    const symbolsStr = substepItem.querySelector('.substep-symbols')?.value || '';
 
     const substepData = {};
     if (subDesc) {
@@ -88,6 +94,10 @@ function getStepJsonData(stepItem) {
     }
     if (api1List.length > 0) {
       substepData.api1 = api1List;
+    }
+    const symList = symbolsStr.split(',').map(x => x.trim()).filter(Boolean);
+    if (symList.length > 0) {
+      substepData.symbols = symList;
     }
 
     if (Object.keys(substepData).length > 0) {
@@ -112,9 +122,19 @@ function applyStepJsonData(stepItem, data) {
   const descriptionInput = stepItem.querySelector('.step-description');
   const legacyApiInput = stepItem.querySelector('.step-api-legacy');
   const substepsContainer = stepItem.querySelector('.substeps-container');
+  const stepSymbolsInput = stepItem.querySelector('.step-symbols');
 
   titleInput.value = data.title ?? '';
   descriptionInput.value = data.description ?? data.step ?? '';
+  if (stepSymbolsInput) {
+    if (Array.isArray(data.symbols)) {
+      stepSymbolsInput.value = data.symbols.join(', ');
+    } else if (typeof data.symbols === 'string') {
+      stepSymbolsInput.value = data.symbols;
+    } else {
+      stepSymbolsInput.value = '';
+    }
+  }
 
   const legacyApis = data.apis ?? data.api;
   if (legacyApiInput) {
@@ -138,8 +158,10 @@ function applyStepJsonData(stepItem, data) {
       const api1Val = Array.isArray(sub?.api1)
         ? sub.api1.join(', ')
         : (typeof sub?.api1 === 'string' ? sub.api1 : '');
-
-      substepsContainer.appendChild(createSubstepElement(desc, api2Val, api1Val));
+      const symVal = Array.isArray(sub?.symbols)
+        ? sub.symbols.join(', ')
+        : (typeof sub?.symbols === 'string' ? sub.symbols : '');
+      substepsContainer.appendChild(createSubstepElement(desc, api2Val, api1Val, undefined, symVal));
     });
   }
 }

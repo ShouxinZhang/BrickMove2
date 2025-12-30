@@ -67,21 +67,27 @@ export function buildMarkdownWithSegments(data) {
             source: { kind: 'substepDescription', stepIndex: idx, substepIndex: subIdx }
           });
 
-          const api2List = formatApiList(substep.api2);
-          if (api2List) {
-            markdownParts.push(`  - API (2分): ${api2List}`);
-            segments.push({
-              tag: 'LI',
-              source: { kind: 'substepApi2', stepIndex: idx, substepIndex: subIdx }
+          const api2List = formatApiEntries(substep.api2);
+          if (api2List.length > 0) {
+            appendApiBlock({
+              markdownParts,
+              segments,
+              entries: api2List,
+              label: 'API (2分)',
+              indentLevel: 2,
+              segment: { tag: 'LI', source: { kind: 'substepApi2', stepIndex: idx, substepIndex: subIdx } }
             });
           }
 
-          const api1List = formatApiList(substep.api1);
-          if (api1List) {
-            markdownParts.push(`  - API (1分): ${api1List}`);
-            segments.push({
-              tag: 'LI',
-              source: { kind: 'substepApi1', stepIndex: idx, substepIndex: subIdx }
+          const api1List = formatApiEntries(substep.api1);
+          if (api1List.length > 0) {
+            appendApiBlock({
+              markdownParts,
+              segments,
+              entries: api1List,
+              label: 'API (1分)',
+              indentLevel: 2,
+              segment: { tag: 'LI', source: { kind: 'substepApi1', stepIndex: idx, substepIndex: subIdx } }
             });
           }
 
@@ -92,12 +98,15 @@ export function buildMarkdownWithSegments(data) {
           markdownParts.push('');
         }
       } else if (step.api) {
-        const legacyApiList = formatApiList(step.api);
-        if (legacyApiList) {
-          markdownParts.push(`API: ${legacyApiList}`);
+        const legacyApiList = formatApiEntries(step.api);
+        if (legacyApiList.length > 0) {
+          markdownParts.push('API:');
           segments.push({
             tag: 'P',
             source: { kind: 'stepApi', stepIndex: idx }
+          });
+          legacyApiList.forEach(api => {
+            markdownParts.push(`- \`${api}\``);
           });
           markdownParts.push('');
         }
@@ -109,19 +118,22 @@ export function buildMarkdownWithSegments(data) {
   return { markdown, segments };
 }
 
-function formatApiList(raw) {
+function formatApiEntries(raw) {
   if (!raw) {
-    return '';
+    return [];
   }
 
   const entries = Array.isArray(raw) ? raw : String(raw).split(',');
-  const cleaned = entries
+  return entries
     .map(entry => entry.trim())
     .filter(Boolean);
+}
 
-  if (cleaned.length === 0) {
-    return '';
-  }
-
-  return cleaned.map(item => `\`${item}\``).join(', ');
+function appendApiBlock({ markdownParts, segments, entries, label, indentLevel, segment }) {
+  const indent = ' '.repeat(indentLevel);
+  markdownParts.push(`${indent}- ${label}:`);
+  segments.push(segment);
+  entries.forEach(entry => {
+    markdownParts.push(`${indent}  - \`${entry}\``);
+  });
 }

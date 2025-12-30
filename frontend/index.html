@@ -22,14 +22,19 @@
     </div>
     <header>
       <div class="actions-import">
-        <input type="file" id="fileInput" accept=".json" />
-        <label for="fileInput" class="file-label">Choose JSON File</label>
-        <button id="loadJsonBtn" class="load-json-btn">从文本加载JSON</button>
+        <input type="file" id="fileInput" accept=".json,.md,.csv" />
+        <label for="fileInput" class="file-label">选择 JSON/Markdown 文件</label>
+        <button id="loadJsonBtn" class="load-json-btn">从文本加载</button>
         <button id="saveBtn">下载JSON</button>
       </div>
       <div class="actions-export">
+        <input type="file" id="csvUploadInput" accept=".csv" hidden />
+        <button id="csvUploadBtn" class="upload-csv-btn" type="button">保存到目录</button>
         <button id="exportCsvBtn" class="export-csv-btn">导出CSV</button>
         <button id="exportMdBtn" class="export-md-btn">导出Markdown</button>
+        <button id="saveAllBtn" class="upload-csv-btn" type="button">保存</button>
+        <button id="openHistoryBtn" class="upload-csv-btn" type="button">历史</button>
+        <button id="settingsBtn" class="settings-btn" type="button">设置</button>
       </div>
     </header>
     <main>
@@ -50,6 +55,10 @@
         <div class="form-section">
           <label>定理陈述 (MathJax)</label>
           <textarea id="theoremStatement" rows="3" placeholder="用 $...$ 和 $$...$$ 写数学公式"></textarea>
+        </div>
+        <div class="form-section">
+          <label>全局符号 (逗号分隔，供所有部分继承)</label>
+          <input type="text" id="theoremSymbols" placeholder="如 x:R, y:R, f:R→R" />
         </div>
         <div class="form-section">
           <label>证明步骤</label>
@@ -90,6 +99,30 @@
       <div class="api-modal-body" id="apiModalBody"></div>
     </div>
   </div>
+  <dialog id="historyDialog" class="settings-dialog">
+    <form class="settings-form" method="dialog">
+      <h3 class="settings-title">历史文件</h3>
+      <div id="historyList" style="max-height: 50vh; overflow: auto; border: 1px solid #e5e7eb; border-radius: 6px;">
+      </div>
+      <div class="settings-actions">
+        <button type="submit" class="settings-cancel">关闭</button>
+      </div>
+    </form>
+  </dialog>
+  <dialog id="settingsDialog" class="settings-dialog">
+    <form id="settingsForm" class="settings-form">
+      <h3 class="settings-title">导出设置</h3>
+      <label class="settings-field">
+        <span>CSV 保存目录</span>
+        <input type="text" id="settingsCsvDirInput" placeholder="留空使用默认 csv_save" />
+        <small>可填写绝对路径，或相对于工作区的路径。</small>
+      </label>
+      <div class="settings-actions">
+        <button type="button" id="settingsCancelBtn" class="settings-cancel">取消</button>
+        <button type="submit" class="settings-save">保存</button>
+      </div>
+    </form>
+  </dialog>
   <script type="module" src="main.js"></script>
 </body>
 </html>

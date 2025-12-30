@@ -1,0 +1,575 @@
+{
+  "id": "b60dd6b8-be3f-44d5-a9c8-d2533ebbfde8",
+  "statement": "设 $f: A \\to B$ 是诺特局部环之间的平坦局部同态。若 $A$ 和纤维环 $B/\\mathfrak{m}_A B$ 均是正则局部环，则 $B$ 也是正则局部环。",
+  "apis": [],
+  "children": [
+    {
+      "id": "4aea1f03-0728-487e-b344-37e8d31fe95f",
+      "statement": "设 $(A, \\mathfrak{m}_A)$ 和 $(B, \\mathfrak{m}_B)$ 为诺特局部环，$f: A \\to B$ 为平坦局部同态。则成立：\n$$ \\dim(B) = \\dim(A) + \\dim(B / \\mathfrak{m}_A B) $$",
+      "apis": [],
+      "children": [
+        {
+          "id": "4f9df0bb-cade-4280-8b81-081713c8ad6d",
+          "statement": "设 $A, B$ 为诺特局部环，$f: A \\to B$ 为平坦局部同态。令 $I = \\mathfrak{m}_A B$ 为扩环中的扩张理想。考虑商环（纤维环）$B/I$ 以及自然商同态 $q: B \\to B/I$。\n由于 $f$ 是局部同态，即 $f(\\mathfrak{m}_A) \\subseteq \\mathfrak{m}_B$，因此 $I \\subseteq \\mathfrak{m}_B$，且商环 $B/I$ 仍为非平凡局部环。\n容易验证，$B/I$ 的极大理想即为 $\\mathfrak{m}_B$ 在商映射下的像，即 $\\overline{\\mathfrak{m}_B} = \\mathfrak{m}_B / I$。",
+          "apis": [
+            {
+              "name": "IsLocalRing.local_hom_TFAE, Ideal.Quotient.mk",
+              "points": 2
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "969cb189-43f4-4e33-bf10-54f045e94261",
+          "statement": "设 $(A, \\mathfrak{m}_A)$ 和 $(B, \\mathfrak{m}_B)$ 为诺特局部环，$f: A \\to B$ 为平坦局部同态。由局部同态的定义知 $f^{-1}(\\mathfrak{m}_B) = \\mathfrak{m}_A$。",
+          "apis": [
+            {
+              "name": "Ideal.LiesOver, IsLocalRing.local_hom_TFAE",
+              "points": 2
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "79457cf2-9ed0-4b72-85da-c7ee4c18ea4f",
+          "statement": "设 $\\varphi: R \\to S$ 为环同态，$S$ 为诺特环，且代数扩张 $R \\to S$ 满足下降性质（Going-Down）。\n设 $\\mathfrak{P} \\in \\operatorname{Spec}(S)$，$\\mathfrak{p} = \\mathfrak{P} \\cap R$ 为其在 $R$ 中的收缩（即 $\\mathfrak{P}$ 位于 $\\mathfrak{p}$ 之上）。\n则成立：\n$$ \\operatorname{ht}(\\mathfrak{P}) = \\operatorname{ht}(\\mathfrak{p}) + \\operatorname{ht}(\\mathfrak{P}/\\mathfrak{p}S) $$",
+          "apis": [],
+          "children": [
+            {
+              "id": "f911d3c3-58c2-423f-b6e7-c7f060abd624",
+              "statement": "设 $\\varphi: R \\to S$ 为环同态，$S$ 为诺特环。设 $\\mathfrak{p} \\in \\operatorname{Spec}(R)$，$\\mathfrak{P} \\in \\operatorname{Spec}(S)$，且 $\\mathfrak{P}$ 位于 $\\mathfrak{p}$ 之上（即 $\\mathfrak{P} \\cap R = \\mathfrak{p}$）。则：\n$$ \\operatorname{ht}(\\mathfrak{P}) \\le \\operatorname{ht}(\\mathfrak{p}) + \\operatorname{ht}(\\mathfrak{P}/\\mathfrak{p}S) $$",
+              "apis": [],
+              "children": [
+                {
+                  "id": "7330a3d2-c027-4bee-bdf1-523b3e5f6a8e",
+                  "statement": "设 $R$ 为诺特环，$\\mathfrak{p}$ 为其中的素理想。则存在 $R$ 中的有限子集 $s$，满足：\n1.  $\\mathfrak{p}$ 是包含理想 $(s)$ 的最小素理想之一（即 $\\mathfrak{p} \\in \\operatorname{Min}((s))$）；\n2.  $s$ 的基数恰好等于 $\\mathfrak{p}$ 的高度，即 $|s| = \\operatorname{ht}(\\mathfrak{p})$。",
+                  "apis": [],
+                  "children": [
+                    {
+                      "id": "f12f49d9-c6b4-4ab1-9cb7-baf58d8ac63e",
+                      "statement": "设 $R$ 为交换诺特环，$\\mathfrak{p}$ 为其中的素理想，$n$ 为扩展自然数（$\\mathbb{N} \\cup \\{\\infty\\}$）。则以下两条件等价：\n1.  $\\mathfrak{p}$ 的高度不超过 $n$（即 $\\operatorname{ht}(\\mathfrak{p}) \\le n$）；\n2.  存在一个理想 $I$，使得 $\\mathfrak{p}$ 是 $I$ 的最小素理想之一，且 $I$ 可以由不超过 $n$ 个元素生成。",
+                      "apis": [],
+                      "children": [
+                        {
+                          "id": "07c2c6e9-b3a9-4708-a92f-232fcafde453",
+                          "statement": "设 $R$ 为环，$I$ 为 $R$ 中的真理想（$I \\ne \\top$）。则存在 $I$ 的一个子理想 $J \\subseteq I$，满足：\n1.  $J$ 的最小生成元个数（Rank）等于 $I$ 的高度，即 $\\operatorname{spanRank}(J) = \\operatorname{ht}(I)$；\n2.  $J$ 的高度等于 $I$ 的高度，即 $\\operatorname{ht}(J) = \\operatorname{ht}(I)$。",
+                          "apis": [],
+                          "children": [
+                            {
+                              "id": "3b405f47-1884-4d56-8079-5bd016958df0",
+                              "statement": "对于高度为 $h$ 的理想 $I$，存在一个子理想 $J \\subseteq I$，使得 $J$ 由至多 $h$ 个元素生成，且 $J$ 的高度至少为 $h$（即 $\\operatorname{ht}(J) \\ge \\operatorname{ht}(I)$）。",
+                              "apis": [
+                                {
+                                  "name": "exists_spanRank_le_and_le_height_of_le_height",
+                                  "points": 2
+                                }
+                              ],
+                              "children": []
+                            },
+                            {
+                              "id": "b9339a15-ba04-41ae-b9df-9057524db0a7",
+                              "statement": "设 $I, J$ 为环 $R$ 中的理想，且满足 $I \\subseteq J$。则成立：\n$$ \\operatorname{ht}(I) \\le \\operatorname{ht}(J) $$",
+                              "apis": [
+                                {
+                                  "name": "Ideal.height_mono",
+                                  "points": 2
+                                }
+                              ],
+                              "children": []
+                            },
+                            {
+                              "id": "98523bd4-8705-430a-a3fe-8c0e403a368a",
+                              "statement": "设 $R$ 为环，$I$ 为真理想（$I \\ne \\top$）。则理想的高度不超过其最小生成元个数（Rank）：\n$$ \\operatorname{ht}(I) \\le \\operatorname{spanRank}(I) $$",
+                              "apis": [],
+                              "children": [
+                                {
+                                  "id": "fe444adf-0358-4925-9a59-a7632b696145",
+                                  "statement": "",
+                                  "apis": [],
+                                  "children": []
+                                },
+                                {
+                                  "id": "01027b04-ed82-44b5-b46f-55ddaf173b72",
+                                  "statement": "设 $R$ 为交换诺特环，$I$ 为由 $n$ 个元素生成的理想。若素理想 $\\mathfrak{p}$ 是包含 $I$ 的极小素理想之一（即 $\\mathfrak{p} \\in \\operatorname{Min}(I)$），则其高度满足：\n$$ \\operatorname{ht}(\\mathfrak{p}) \\le n $$",
+                                  "apis": [],
+                                  "children": [
+                                    {
+                                      "id": "69026ab8-3e33-4ad0-b77b-280f3987219c",
+                                      "statement": "在诺特环中，极小素理想的高度为 0。",
+                                      "apis": [
+                                        {
+                                          "name": "Ideal.height_eq_primeHeight",
+                                          "points": 1
+                                        },
+                                        {
+                                          "name": "Ideal.primeHeight_eq_zero_iff",
+                                          "points": 2
+                                        },
+                                        {
+                                          "name": "nonpos_iff_eq_zero",
+                                          "points": 1
+                                        }
+                                      ],
+                                      "children": []
+                                    },
+                                    {
+                                      "id": "22b8cd1e-15be-48a5-9825-4a62d835e60e",
+                                      "statement": "设 $R$ 为交换诺特环，$I$ 为由 $n$ 个元素生成的理想。若素理想 $\\mathfrak{p}$ 是包含 $I$ 的极小素理想之一（即 $\\mathfrak{p} \\in \\operatorname{Min}(I)$），利用局部化性质：将环 $R$ 在 $\\mathfrak{p}$ 处局部化得到 $R_{\\mathfrak{p}}$。此时 $\\mathfrak{p}R_{\\mathfrak{p}}$ 成为局部环的极大理想，且其高度保持不变。这允许我们假设 $R$ 是局部环且 $\\mathfrak{p}$ 是其极大理想。",
+                                      "apis": [
+                                        {
+                                          "name": "Localization.AtPrime",
+                                          "points": 2
+                                        },
+                                        {
+                                          "name": "IsLocalization.height_comap",
+                                          "points": 2
+                                        }
+                                      ],
+                                      "children": []
+                                    },
+                                    {
+                                      "id": "85af455b-9066-4fd0-a29c-7ad3c0971f47",
+                                      "statement": "设 $R$ 为诺特环，$\\mathfrak{p}$ 为素理想，$n$ 为自然数。\n则 $\\operatorname{ht}(\\mathfrak{p}) \\le n$ 当且仅当对于所有被 $\\mathfrak{p}$ “覆盖”的素理想 $\\mathfrak{q}$（即 $\\mathfrak{q} \\subsetneq \\mathfrak{p}$ 且不存在素理想 $\\mathfrak{q}'$ 使得 $\\mathfrak{q} \\subsetneq \\mathfrak{q}' \\subsetneq \\mathfrak{p}$），都有 $\\operatorname{ht}(\\mathfrak{q}) < n$。",
+                                      "apis": [],
+                                      "children": [
+                                        {
+                                          "id": "1f7fbc01-03ff-416a-b0f0-51886bbdc192",
+                                          "statement": "设 $\\mathfrak{p}$ 为环 $R$ 中的素理想，$n$ 为自然数。\n则 $\\operatorname{ht}(\\mathfrak{p}) \\le n$ 当且仅当对于所有真包含于 $\\mathfrak{p}$ 的素理想 $\\mathfrak{q}$（$\\mathfrak{q} \\subsetneq \\mathfrak{p}$），都有 $\\operatorname{ht}(\\mathfrak{q}) < n$。",
+                                          "apis": [],
+                                          "children": [
+                                            {
+                                              "id": "bbee4141-5e54-411a-88b8-3aaec3fa1168",
+                                              "statement": "素理想 $\\mathfrak{p}$ 的高度定义为素谱 $\\operatorname{Spec}(R)$ 中以 $\\mathfrak{p}$ 为顶点的所有下降链长度的上确界。\n在偏序集（Poset）理论中，一个元素的高度 $h(x)$ 满足 $h(x) \\le n \\iff \\forall y < x, h(y) < n$。",
+                                              "apis": [
+                                                {
+                                                  "name": "Ideal.height_eq_primeHeight",
+                                                  "points": 1
+                                                },
+                                                {
+                                                  "name": "Ideal.primeHeight",
+                                                  "points": 1
+                                                },
+                                                {
+                                                  "name": "Order.height_le_coe_iff",
+                                                  "points": 1
+                                                },
+                                                {
+                                                  "name": "PrimeSpectrum.equivSubtype",
+                                                  "points": 1
+                                                },
+                                                {
+                                                  "name": "Equiv.forall_congr_left",
+                                                  "points": 1
+                                                },
+                                                {
+                                                  "name": "Subtype.forall",
+                                                  "points": 1
+                                                }
+                                              ],
+                                              "children": []
+                                            },
+                                            {
+                                              "id": "0750a282-ee5c-4925-be97-fc850a7cf8f6",
+                                              "statement": "理想高度与素谱高度的等价",
+                                              "apis": [
+                                                {
+                                                  "name": "Ideal.height_eq_primeHeight",
+                                                  "points": 2
+                                                }
+                                              ],
+                                              "children": []
+                                            },
+                                            {
+                                              "id": "6d1ccb65-3ec6-4f5b-b136-2355b1a52089",
+                                              "statement": "素谱与素理想集合的等价",
+                                              "apis": [
+                                                {
+                                                  "name": "Ideal.primeHeight",
+                                                  "points": 2
+                                                }
+                                              ],
+                                              "children": []
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "id": "5ddb7b6b-928e-49cb-ad24-e615d6e98f51",
+                          "statement": "设 $I, J$ 是环 $R$ 的理想，满足 $I \\subseteq J$，且 $J$ 是一个有限高的素理想。若：\n$$\\text{ht}(J) \\le \\text{ht}(I)$$\n则 $J$ 是包含 $I$ 的极小素理想（即 $J \\in \\text{minPrimes}(I)$）。",
+                          "apis": [
+                            {
+                              "name": "Ideal.mem_minimalPrimes_of_height_eq",
+                              "points": 2
+                            }
+                          ],
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "5e393d53-ecc6-4d11-b3c0-378a5b10947d",
+                  "statement": "设 $f: \\alpha \\to \\beta$ 为映射，$s \\subseteq \\alpha$ 为集合，$t \\subseteq \\beta$ 为有限集合。\n\n若 $f$ 在 $s$ 上的像包含 $t$（即 $f|_s$ 映上 $t$），则存在有限子集 $u \\subseteq \\alpha$ 满足：\n1. $u \\subseteq s$；\n2. $f$ 在 $u$ 上是单射；\n3. $f(u) = t$。",
+                  "apis": [],
+                  "children": [
+                    {
+                      "id": "a4fb8106-fe94-4877-b29f-8d104685165e",
+                      "statement": "对于满射映射，总能从定义域中选出一个子集，使得映射在该子集上是单射且像不变。由此得到一个集合 $u \\subseteq s$，满足 $f$ 在 $u$ 上单射且 $f(u) = t$。",
+                      "apis": [
+                        {
+                          "name": "Set.range",
+                          "points": 1
+                        },
+                        {
+                          "name": "Set.InjOn",
+                          "points": 1
+                        },
+                        {
+                          "name": " Set.image",
+                          "points": 1
+                        }
+                      ],
+                      "children": []
+                    },
+                    {
+                      "id": "cc6fb24d-439a-4dbd-975a-b7d2bbf7ef26",
+                      "statement": "若映射单射且像有限，则原像集有限",
+                      "apis": [
+                        {
+                          "name": "Finite.of_finite_image",
+                          "points": 2
+                        }
+                      ],
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "id": "8f066028-4940-484f-ba1b-086a3f9ffaf2",
+                  "statement": "设 $\\varphi: R \\to S$ 为环同态，$I$ 为 $R$ 中的理想，$J$ 为 $S$ 中的理想。设 $\\mathfrak{P} \\in \\operatorname{Spec}(S)$，$\\mathfrak{p} = \\mathfrak{P} \\cap R$ 为其在 $R$ 中的收缩。\n若满足：\n1. $\\mathfrak{p}$ 是包含 $I$ 的极小素理想（$\\mathfrak{p} \\in \\operatorname{Min}(I)$）；\n2. $\\mathfrak{P}$ 包含 $J$；\n3. 在商环 $\\bar{S} = S/\\mathfrak{p}S$ 中，$\\mathfrak{P}$ 的像 $\\bar{\\mathfrak{P}}$ 是包含 $J$ 的像 $\\bar{J}$ 的极小素理想；\n\n则 $\\mathfrak{P}$ 是包含理想 $IS + J$ 的极小素理想。",
+                  "apis": [],
+                  "children": [
+                    {
+                      "id": "f6b1da84-e64f-4e20-b47a-54c9eeaa8cfe",
+                      "statement": "设 $f: R \\to S$ 是环同态，$I$ 是 $R$ 的理想，$K$ 是 $S$ 的理想。则：\n$$f(I)S \\le K \\iff I \\le f^{-1}(K)$$",
+                      "apis": [
+                        {
+                          "name": "Ideal.map_le_iff_le_comap",
+                          "points": 2
+                        }
+                      ],
+                      "children": []
+                    },
+                    {
+                      "id": "72db7b25-66d3-42cf-8b00-374acf0b88ca",
+                      "statement": "设 $S$ 是 $R$-代数。对于理想 $p \\subseteq R$ 和 $P \\subseteq S$，称 **$P$ 位于 $p$ 之上**（$P$ lies over $p$），是指 $p$ 是 $P$ 在 $R$ 中的原像：\n$$p = f^{-1}(P)$$\n其中 $f: R \\to S$ 是代数结构映射。",
+                      "apis": [
+                        {
+                          "name": "Ideal.LiesOver.over",
+                          "points": 2
+                        }
+                      ],
+                      "children": []
+                    },
+                    {
+                      "id": "2da7314d-06ba-405e-94a3-0b909f7a0c6c",
+                      "statement": "收缩映射的单调性",
+                      "apis": [
+                        {
+                          "name": "Ideal.comap_mono",
+                          "points": 2
+                        }
+                      ],
+                      "children": []
+                    },
+                    {
+                      "id": "cb65fce9-3684-47f4-87d2-a0a35ed0b157",
+                      "statement": "设 $R$ 为环，$I, \\mathfrak{p}$ 为其理想。若 $\\mathfrak{p}$ 是素理想且满足 $I \\subseteq \\mathfrak{p}$，则 $\\mathfrak{p}$ 在商环 $R/I$ 中的像（即扩张理想 $\\mathfrak{p} \\cdot (R/I)$）也是素理想。",
+                      "apis": [
+                        {
+                          "name": "Quotient.mk_surjective",
+                          "points": 1
+                        },
+                        {
+                          "name": "Ideal.map_isPrime_of_surjective",
+                          "points": 1
+                        }
+                      ],
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "id": "7750eb02-d497-4056-bdf8-5361613d19ad",
+                  "statement": "设 $s \\subset R$ 为诺特环中的一个有限子集。若素理想 $\\mathfrak{p}$ 是包含理想 $(s)$ 的极小素理想（即 $\\mathfrak{p} \\in \\operatorname{Min}((s))$），则 $\\mathfrak{p}$ 的高度不超过 $s$ 的基数：\n$$ \\operatorname{ht}(\\mathfrak{p}) \\le |s| $$",
+                  "apis": [],
+                  "children": [
+                    {
+                      "id": "89bfeb97-cb53-4ebf-a736-e17c141754ea",
+                      "statement": "生成空间的秩受限于生成集的基数",
+                      "apis": [
+                        {
+                          "name": "Submodule.spanRank_span_le_card",
+                          "points": 2
+                        }
+                      ],
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "f707856d-5005-4fc0-ae20-2036bd2a1633",
+              "statement": "设 $\\mathfrak{p}$ 为环 $R$ 中的一个具有有限高度的素理想。则在 $R$ 的素谱 $\\operatorname{Spec}(R)$ 中，存在一条长度恰好等于 $\\operatorname{ht}(\\mathfrak{p})$ 且以 $\\mathfrak{p}$ 为终点的严格递增素理想链：\n$$ \\mathfrak{p}_0 \\subsetneq \\mathfrak{p}_1 \\subsetneq \\dots \\subsetneq \\mathfrak{p}_n = \\mathfrak{p} $$\n其中 $n = \\operatorname{ht}(\\mathfrak{p})$。",
+              "apis": [
+                {
+                  "name": "Ideal.height_eq_primeHeight",
+                  "points": 1
+                },
+                {
+                  "name": "Ideal.height_ne_top",
+                  "points": 1
+                },
+                {
+                  "name": "Order.exists_series_of_height_eq_coe",
+                  "points": 1
+                }
+              ],
+              "children": []
+            },
+            {
+              "id": "732e3041-c7cc-42ec-b539-fb8774c41dcb",
+              "statement": "设 $f: R \\to S$ 为满射环同态。则理想的收缩映射 $\\text{comap}(f): \\text{Ideal}(S) \\to \\text{Ideal}(R)$（即 $I \\mapsto f^{-1}(I)$）是严格单调的。即：若 $I \\subsetneq J$ 为 $S$ 中的理想，则 $f^{-1}(I) \\subsetneq f^{-1}(J)$ 为 $R$ 中的理想。",
+              "apis": [],
+              "children": [
+                {
+                  "id": "e049c6ad-3d0e-47e7-a799-817d90b0ecf0",
+                  "statement": "满射诱导的理想格序同构",
+                  "apis": [
+                    {
+                      "name": "Ideal.relIsoOfSurjective",
+                      "points": 2
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "id": "7a01081c-8bf6-4752-9acb-7473a9a3349f",
+                  "statement": "设 $\\alpha, \\beta$ 为预序集。若 $e : \\alpha \\simeq \\beta$ 是一个**序同构**，则 $e$ 是**严格单调**的。",
+                  "apis": [
+                    {
+                      "name": "OrderIso.strictMono",
+                      "points": 2
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "e471006b-4d31-43c4-8936-fd894fa0bff8",
+              "statement": "设 $R \\to S$ 是满足**下降性质**（Going-Down property）的代数扩张。\n设 $\\mathfrak{p}_0 \\subsetneq \\mathfrak{p}_1 \\subsetneq \\dots \\subsetneq \\mathfrak{p}_n$ 是 $R$ 中的一条素理想链。若 $\\mathfrak{P}_n$ 是 $S$ 中的素理想且位于 $\\mathfrak{p}_n$ 之上（即 $\\mathfrak{P}_n \\cap R = \\mathfrak{p}_n$），则存在 $S$ 中的一条素理想链 $\\mathfrak{P}_0 \\subsetneq \\mathfrak{P}_1 \\subsetneq \\dots \\subsetneq \\mathfrak{P}_n$，使得对于每一个 $i$，都有 $\\mathfrak{P}_i \\cap R = \\mathfrak{p}_i$。",
+              "apis": [],
+              "children": [
+                {
+                  "id": "020412c2-ac13-4501-9838-799813d2c32a",
+                  "statement": "对环 $R$ 中的素理想链 $l$ 的长度进行归纳。",
+                  "apis": [
+                    {
+                      "name": "RelSeries.singleton",
+                      "points": 1
+                    },
+                    {
+                      "name": "RelSeries.tail",
+                      "points": 1
+                    },
+                    {
+                      "name": "RelSeries.cons",
+                      "points": 1
+                    },
+                    {
+                      "name": "RelSeries.toList_injective",
+                      "points": 1
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "id": "46ef62a2-ec9c-4974-a44a-6b461cec2322",
+                  "statement": "设 $S$ 是交换环 $R$ 上的代数。称 $S$ 满足**下降性质**（Going-Down property），是指：\n\n对于 $R$ 中的任意素理想 $p$ 和 $S$ 中的任意素理想 $Q$，若 $p$ 严格包含在 $Q$ 对应的底理想中（即 $p \\subsetneq Q \\cap R$），则存在 $S$ 中的素理想 $P$ 满足：\n1. $P \\subseteq Q$；\n2. $P$ 位于 $p$ 之上（即 $P \\cap R = p$）。",
+                  "apis": [
+                    {
+                      "name": "Algebra.HasGoingDown",
+                      "points": 2
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "id": "7678b773-7713-4c2c-ad3c-67a1f45302dd",
+                  "statement": "设 $S$ 是满足**下降性质**（Going-Down property）的 $R$-代数。若有 $R$ 中的素理想 $p \\subsetneq q$，且 $Q$ 是 $S$ 中位于 $q$ 之上的素理想，则存在 $S$ 中的素理想 $P$ 满足：\n1. $P \\subsetneq Q$；\n2. $P$ 位于 $p$ 之上（即 $P \\cap R = p$）。",
+                  "apis": [
+                    {
+                      "name": "Ideal.exists_ideal_lt_liesOver_of_lt",
+                      "points": 2
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "99c0ce74-2603-4ccc-89eb-210091027ad9",
+              "statement": "设 $\\alpha$ 是预序集，$p$ 是 $\\alpha$ 中的一条**小于链**（LTSeries），$x \\in \\alpha$。若该链的末端元素小于等于 $x$（即 $\\text{last}(p) \\le x$），则该链的长度不大于 $x$ 的**高**（height）：\n$$\\text{length}(p) \\le \\text{ht}(x)$$",
+              "apis": [
+                {
+                  "name": "Order.length_le_height",
+                  "points": 2
+                }
+              ],
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "b7d8db24-1291-43d9-84fe-3f7b4e04f32b",
+          "statement": "在局部环中，Krull 维数定义为极大理想的高度。",
+          "apis": [
+            {
+              "name": "IsLocalRing.maximalIdeal_height_eq_ringKrullDim",
+              "points": 2
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "4652b8df-2cf7-4e18-9840-76ed851362a0",
+      "statement": "设 $(R, \\mathfrak{m})$ 为诺特局部环，$k = R/\\mathfrak{m}$ 为其剩余域。记 $\\dim R$ 为其 Krull 维数，$\\dim_k(\\mathfrak{m}/\\mathfrak{m}^2)$ 为其嵌入维数。则：\n$$ \\dim R \\le \\dim_k(\\mathfrak{m}/\\mathfrak{m}^2) $$",
+      "apis": [],
+      "children": [
+        {
+          "id": "325aac1f-8830-4a17-8ac8-22c2192cf3b3",
+          "statement": "设 $(R, \\mathfrak{m})$ 为诺特局部环，$k = R/\\mathfrak{m}$ 为其剩余域。记 $\\dim R$ 为其 Krull 维数，$\\dim_k(\\mathfrak{m}/\\mathfrak{m}^2)$ 为其嵌入维数。设 $n = \\dim_k(\\mathfrak{m}/\\mathfrak{m}^2)$。选取余切空间 $\\mathfrak{m}/\\mathfrak{m}^2$ 的一组基 $\\{b_1, \\dots, b_n\\}$。利用商映射的满射性，在极大理想 $\\mathfrak{m}$ 中选取元素 $\\{x_1, \\dots, x_n\\}$，使得其在 $\\mathfrak{m}/\\mathfrak{m}^2$ 中的像恰好为这组基。",
+          "apis": [
+            {
+              "name": "Module.finBasis",
+              "points": 1
+            },
+            {
+              "name": "Ideal.toCotangent_surjective",
+              "points": 1
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "d5d843a0-1fa1-47de-a20d-7a5f4752a863",
+          "statement": "设 $(R, \\mathfrak{m})$ 为诺特局部环，$k = R/\\mathfrak{m}$ 为其剩余域。记 $\\dim R$ 为其 Krull 维数，$\\dim_k(\\mathfrak{m}/\\mathfrak{m}^2)$ 为其嵌入维数。设 $n = \\dim_k(\\mathfrak{m}/\\mathfrak{m}^2)$。选取余切空间 $\\mathfrak{m}/\\mathfrak{m}^2$ 的一组基 $\\{b_1, \\dots, b_n\\}$。利用商映射的满射性，在极大理想 $\\mathfrak{m}$ 中选取元素 $\\{x_1, \\dots, x_n\\}$，使得其在 $\\mathfrak{m}/\\mathfrak{m}^2$ 中的像恰好为这组基。证明 $\\{x_i\\}$ 在余切空间中的像生成了整个 $k$-向量空间 $\\mathfrak{m}/\\mathfrak{m}^2$。这是由于它们被选为一组基。",
+          "apis": [
+            {
+              "name": "Submodule.span_eq",
+              "points": 2
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "2c2c7666-b1f8-4c9a-b141-210f61a3d5a7",
+          "statement": "设 $(R, \\mathfrak{m})$ 为诺特局部环，$k = R/\\mathfrak{m}$ 为其剩余域。在局部环中，如果一组元素生成的向量空间是 $\\mathfrak{m}/\\mathfrak{m}^2$ 的生成集，则这组元素本身生成了整个 $R$-模 $\\mathfrak{m}$。",
+          "apis": [
+            {
+              "name": "CotangentSpace.span_image_eq_top_iff",
+              "points": 2
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "568e9713-236f-4d39-b6df-302b8c6bafad",
+          "statement": "设 $M$ 是半环 $R$ 上的模，$s \\subseteq M$ 是一个有限集。则由 $s$ 生成的子模 $\\text{span}(s)$ 的**有限生成秩**（span finrank）不大于 $s$ 的基数：\n$$\\text{finrank}(\\text{span}(s)) \\le |s|$$",
+          "apis": [
+            {
+              "name": "Submodule.spanFinrank_span_le_ncard_of_finite",
+              "points": 2
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "7f98af97-1140-46de-bf08-ef76972f7501",
+      "statement": "设 $f: A \\to B$ 是诺特局部环之间的平坦局部同态。若 $A$ 和纤维环 $B/\\mathfrak{m}_A B$ 均是正则局部环，则 $B$ 也是正则局部环。 由 $A$ 和 $B/I$ 的正则性，它们的嵌入维数分别等于其 Krull 维数。",
+      "apis": [
+        {
+          "name": "IsRegularLocalRing.reg",
+          "points": 2
+        }
+      ],
+      "children": []
+    },
+    {
+      "id": "c613351e-6e04-4b3f-b53f-b2500b6a58b7",
+      "statement": "设 $f: A \\to B$ 是诺特局部环之间的平坦局部同态。若 $A$ 和纤维环 $B/\\mathfrak{m}_A B$ 均是正则局部环，则 $B$ 也是正则局部环。取 $\\mathfrak{m}_A$ 的生成元 $x_A$，映入 $B$ 得到 $f(x_A)$ 生成 $I$。",
+      "apis": [
+        {
+          "name": "Module.Free.chooseBasis",
+          "points": 1
+        },
+        {
+          "name": "Ideal.toCotangent_surjective",
+          "points": 1
+        }
+      ],
+      "children": []
+    },
+    {
+      "id": "09370b0a-72e5-42cc-a1eb-2082dbec1608",
+      "statement": "设 $f: A \\to B$ 是诺特局部环之间的平坦局部同态。若 $A$ 和纤维环 $B/\\mathfrak{m}_A B$ 均是正则局部环，则 $B$ 也是正则局部环。取 $\\mathfrak{m}_{B/I}$ 的生成元 $y_F$，提升回 $B$ 得到 $y_B$。",
+      "apis": [
+        {
+          "name": "Ideal.Quotient.mk_surjective",
+          "points": 2
+        }
+      ],
+      "children": []
+    },
+    {
+      "id": "87ca0548-06c5-4e80-8cf4-e30a1364745d",
+      "statement": "设 $f: A \\to B$ 是诺特局部环之间的平坦局部同态。若 $A$ 和纤维环 $B/\\mathfrak{m}_A B$ 均是正则局部环，则 $B$ 也是正则局部环。取 $\\mathfrak{m}_A$ 的生成元 $x_A$，映入 $B$ 得到 $f(x_A)$ 生成 $I$。取 $\\mathfrak{m}_{B/I}$ 的生成元 $y_F$，提升回 $B$ 得到 $y_B$。**合并生成元**：证明 $\\mathfrak{m}_B$ 由 $\\{f(x_A)\\} \\cup \\{y_B\\}$ 生成。",
+      "apis": [
+        {
+          "name": "Ideal.span_union",
+          "points": 1
+        },
+        {
+          "name": "Ideal.map_span",
+          "points": 1
+        }
+      ],
+      "children": []
+    },
+    {
+      "id": "e3134df1-c79f-48ae-83da-3336a407c44b",
+      "statement": "设 $f: A \\to B$ 是诺特局部环之间的平坦局部同态。若 $A$ 和纤维环 $B/\\mathfrak{m}_A B$ 均是正则局部环，则 $B$ 也是正则局部环。 $\\mathfrak{m}_B$ 的生成元个数不超过 $A$ 的嵌入维数与 $B/I$ 的嵌入维数之和。\n    即 $\\dim_k(\\mathfrak{m}_B/\\mathfrak{m}_B^2) \\le \\dim(A) + \\dim(B/I)$。",
+      "apis": [
+        {
+          "name": "finrank_le_of_span_eq_top",
+          "points": 2
+        }
+      ],
+      "children": []
+    }
+  ]
+}

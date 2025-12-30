@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="./styles.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+          onload="renderMathInElement(document.body, {delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+  <title>树形证明编辑器</title>
+</head>
+<body>
+  <div id="treeApp">
+    <header class="tree-topbar">
+      <div class="topbar-title">证明树</div>
+      <div class="topbar-actions">
+        <input type="file" id="importTreeInput" accept=".json,.md,.csv" />
+        <input type="file" id="uploadTreeCsvInput" accept=".csv" hidden />
+        <button type="button" id="importTreeBtn">导入</button>
+        <button type="button" id="pasteTreeBtn">粘贴</button>
+        <button type="button" id="uploadTreeCsvBtn">保存到目录</button>
+        <button type="button" id="exportTreeJsonBtn">导出JSON</button>
+        <button type="button" id="exportTreeMdBtn">导出Markdown</button>
+        <button type="button" id="saveTreeJsonBtn">保存JSON到目录</button>
+        <button type="button" id="saveTreeMdBtn">保存MD到目录</button>
+        <button type="button" id="exportTreeCsvBtn">导出CSV</button>
+        <button type="button" id="openTreePreviewBtn">树目录预览</button>
+        <button type="button" id="treeSettingsBtn">设置</button>
+      </div>
+    </header>
+    <div class="tree-layout">
+      <aside class="tree-sidebar">
+        <button type="button" id="toggleSidebarBtn" class="sidebar-toggle" aria-label="折叠目录" aria-expanded="true">⟨</button>
+        <div class="sidebar-tools">
+          <input type="search" id="treeSearch" placeholder="搜索节点..." />
+          <div class="tool-buttons">
+            <button type="button" id="expandAllBtn">展开全部</button>
+            <button type="button" id="collapseAllBtn">收起全部</button>
+            <button type="button" id="addRootChildBtn">+ 根节点子节点</button>
+          </div>
+        </div>
+        <nav class="tree-nav" id="treeNav"></nav>
+      </aside>
+      <main class="tree-main">
+        <section class="node-breadcrumb" id="nodeBreadcrumb"></section>
+        <div class="node-workspace">
+          <section class="node-editor" id="nodeEditor"></section>
+          <section class="node-preview" id="nodePreview"></section>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <dialog class="modal" id="pasteModal">
+    <form method="dialog" class="modal-content">
+      <header class="modal-header">
+        <h2>粘贴 JSON / Markdown</h2>
+      </header>
+      <section class="modal-body">
+        <textarea id="pasteTextarea" placeholder="粘贴 JSON 或 Markdown" spellcheck="false"></textarea>
+      </section>
+      <footer class="modal-footer">
+        <button type="submit" value="cancel">取消</button>
+        <button type="submit" value="confirm">导入</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <dialog class="modal" id="settingsModal">
+    <form class="modal-content" id="settingsForm">
+      <header class="modal-header">
+        <h2>设置</h2>
+      </header>
+      <section class="modal-body">
+        <label class="settings-option">
+          <input type="checkbox" id="settingsConfirmDelete" />
+          <span>删除节点时需要确认提示</span>
+        </label>
+        <p class="settings-note">关闭确认后，点击树节点的删除按钮将立即移除该节点及其子节点，请谨慎操作。</p>
+        <label class="settings-option settings-option--stacked">
+          <span>CSV 保存目录</span>
+          <input type="text" id="settingsCsvDirInput" placeholder="留空使用默认 csv_save" />
+          <small>可填写绝对路径，或相对于工作区的路径。</small>
+        </label>
+      </section>
+      <footer class="modal-footer">
+        <button type="button" id="settingsCancelBtn">取消</button>
+        <button type="submit" id="settingsSaveBtn">保存</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

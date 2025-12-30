@@ -1,7 +1,7 @@
 import { state } from '../core/state.js';
 import { createSubstepElement } from './substepElements.js';
 
-export function createStepElement(stepText = '', apiText = '', stepTitle = '', substeps = []) {
+export function createStepElement(stepText = '', apiText = '', stepTitle = '', substeps = [], symbols = '') {
   state.stepCount += 1;
 
   const stepDiv = document.createElement('div');
@@ -28,6 +28,20 @@ export function createStepElement(stepText = '', apiText = '', stepTitle = '', s
   const substepsContainer = document.createElement('div');
   substepsContainer.className = 'substeps-container';
 
+  const symbolsGroup = document.createElement('div');
+  symbolsGroup.className = 'api-input-group';
+  const symbolsLabel = document.createElement('label');
+  symbolsLabel.className = 'api-label';
+  symbolsLabel.textContent = '符号 (逗号分隔，提供给本步骤与其子步骤继承)';
+  const symbolsInput = document.createElement('input');
+  symbolsInput.type = 'text';
+  symbolsInput.className = 'step-symbols';
+  symbolsInput.placeholder = '如 x:R, f:R→R';
+  symbolsInput.value = symbols || '';
+  symbolsGroup.appendChild(symbolsLabel);
+  symbolsGroup.appendChild(symbolsInput);
+  stepDiv.appendChild(symbolsGroup);
+
   if (Array.isArray(substeps) && substeps.length > 0) {
     substeps.forEach(substep => {
       const api2Str = Array.isArray(substep?.api2)
@@ -36,8 +50,11 @@ export function createStepElement(stepText = '', apiText = '', stepTitle = '', s
       const api1Str = Array.isArray(substep?.api1)
         ? substep.api1.join(', ')
         : (substep?.api1 || '');
+      const symbolsStr = Array.isArray(substep?.symbols)
+        ? substep.symbols.join(', ')
+        : (substep?.symbols || '');
       substepsContainer.appendChild(
-        createSubstepElement(substep?.description || '', api2Str, api1Str, substep?.id)
+        createSubstepElement(substep?.description || '', api2Str, api1Str, substep?.id, symbolsStr)
       );
     });
   } else if (!apiText || apiText.trim() === '') {

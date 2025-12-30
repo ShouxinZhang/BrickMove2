@@ -7,11 +7,9 @@ export function initMarkdownExport(button) {
   }
 
   button.addEventListener('click', () => {
-    const data = collectData();
-    const markdown = generateMarkdown(data);
+    const { markdown, filename } = getEditorMarkdown();
     const blob = new Blob([markdown], { type: 'text/markdown;charset=utf-8' });
     const link = document.createElement('a');
-    const filename = buildFilename(data.title);
     link.href = URL.createObjectURL(blob);
     link.download = filename;
     document.body.appendChild(link);
@@ -19,6 +17,13 @@ export function initMarkdownExport(button) {
     document.body.removeChild(link);
     URL.revokeObjectURL(link.href);
   });
+}
+
+export function getEditorMarkdown() {
+  const data = collectData();
+  const markdown = generateMarkdown(data);
+  const filename = buildFilename(data.title);
+  return { markdown, filename };
 }
 
 function buildFilename(title) {

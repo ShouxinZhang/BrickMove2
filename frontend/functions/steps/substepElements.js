@@ -1,6 +1,6 @@
 import { nextSubstepId } from '../core/state.js';
 
-export function createSubstepElement(description = '', api2 = '', api1 = '', substepId) {
+export function createSubstepElement(description = '', api2 = '', api1 = '', substepId, symbols = '') {
   const id = substepId || nextSubstepId();
   const wrapper = document.createElement('div');
   wrapper.className = 'substep-item';
@@ -38,6 +38,19 @@ export function createSubstepElement(description = '', api2 = '', api1 = '', sub
 
   apiInputs.appendChild(buildApiInputGroup('2分 API (single exact):', 'substep-api-2', api2));
   apiInputs.appendChild(buildApiInputGroup('1分 API (combine exact):', 'substep-api-1', api1));
+
+  const symbolsGroup = document.createElement('div');
+  symbolsGroup.className = 'api-input-group';
+  const symbolsLabel = document.createElement('label');
+  symbolsLabel.className = 'api-label';
+  symbolsLabel.textContent = '符号 (逗号分隔，继承叠加)';
+  const symbolsInput = document.createElement('input');
+  symbolsInput.type = 'text';
+  symbolsInput.className = 'substep-symbols';
+  symbolsInput.placeholder = '如 x:R, f:R→R';
+  symbolsInput.value = symbols || '';
+  symbolsGroup.appendChild(symbolsLabel);
+  symbolsGroup.appendChild(symbolsInput);
 
   const insertAfterBtn = document.createElement('button');
   insertAfterBtn.className = 'insert-substep-btn';

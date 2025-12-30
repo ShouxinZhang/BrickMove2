@@ -1,0 +1,56 @@
+informal statement,2分api,1分api
+"设 $A, B$ 为诺特局部环，$f: A \to B$ 为平坦局部同态。令 $I = \mathfrak{m}_A B$ 为扩环中的扩张理想。考虑商环（纤维环）$B/I$ 以及自然商同态 $q: B \to B/I$。
+由于 $f$ 是局部同态，即 $f(\mathfrak{m}_A) \subseteq \mathfrak{m}_B$，因此 $I \subseteq \mathfrak{m}_B$，且商环 $B/I$ 仍为非平凡局部环。
+容易验证，$B/I$ 的极大理想即为 $\mathfrak{m}_B$ 在商映射下的像，即 $\overline{\mathfrak{m}_B} = \mathfrak{m}_B / I$。","IsLocalRing.local_hom_TFAE, Ideal.Quotient.mk",""
+"设 $(A, \mathfrak{m}_A)$ 和 $(B, \mathfrak{m}_B)$ 为诺特局部环，$f: A \to B$ 为平坦局部同态。由局部同态的定义知 $f^{-1}(\mathfrak{m}_B) = \mathfrak{m}_A$。","Ideal.LiesOver, IsLocalRing.local_hom_TFAE",""
+"对于高度为 $h$ 的理想 $I$，存在一个子理想 $J \subseteq I$，使得 $J$ 由至多 $h$ 个元素生成，且 $J$ 的高度至少为 $h$（即 $\operatorname{ht}(J) \ge \operatorname{ht}(I)$）。","exists_spanRank_le_and_le_height_of_le_height",""
+"设 $I, J$ 为环 $R$ 中的理想，且满足 $I \subseteq J$。则成立：
+$$ \operatorname{ht}(I) \le \operatorname{ht}(J) $$","Ideal.height_mono",""
+"","",""
+"在诺特环中，极小素理想的高度为 0。","Ideal.primeHeight_eq_zero_iff","Ideal.height_eq_primeHeight, nonpos_iff_eq_zero"
+"设 $R$ 为交换诺特环，$I$ 为由 $n$ 个元素生成的理想。若素理想 $\mathfrak{p}$ 是包含 $I$ 的极小素理想之一（即 $\mathfrak{p} \in \operatorname{Min}(I)$），利用局部化性质：将环 $R$ 在 $\mathfrak{p}$ 处局部化得到 $R_{\mathfrak{p}}$。此时 $\mathfrak{p}R_{\mathfrak{p}}$ 成为局部环的极大理想，且其高度保持不变。这允许我们假设 $R$ 是局部环且 $\mathfrak{p}$ 是其极大理想。","Localization.AtPrime, IsLocalization.height_comap",""
+"素理想 $\mathfrak{p}$ 的高度定义为素谱 $\operatorname{Spec}(R)$ 中以 $\mathfrak{p}$ 为顶点的所有下降链长度的上确界。
+在偏序集（Poset）理论中，一个元素的高度 $h(x)$ 满足 $h(x) \le n \iff \forall y < x, h(y) < n$。","","Ideal.height_eq_primeHeight, Ideal.primeHeight, Order.height_le_coe_iff, PrimeSpectrum.equivSubtype, Equiv.forall_congr_left, Subtype.forall"
+"理想高度与素谱高度的等价","Ideal.height_eq_primeHeight",""
+"素谱与素理想集合的等价","Ideal.primeHeight",""
+"设 $I, J$ 是环 $R$ 的理想，满足 $I \subseteq J$，且 $J$ 是一个有限高的素理想。若：
+$$\text{ht}(J) \le \text{ht}(I)$$
+则 $J$ 是包含 $I$ 的极小素理想（即 $J \in \text{minPrimes}(I)$）。","Ideal.mem_minimalPrimes_of_height_eq",""
+"对于满射映射，总能从定义域中选出一个子集，使得映射在该子集上是单射且像不变。由此得到一个集合 $u \subseteq s$，满足 $f$ 在 $u$ 上单射且 $f(u) = t$。","","Set.range, Set.InjOn,  Set.image"
+"若映射单射且像有限，则原像集有限","Finite.of_finite_image",""
+"设 $f: R \to S$ 是环同态，$I$ 是 $R$ 的理想，$K$ 是 $S$ 的理想。则：
+$$f(I)S \le K \iff I \le f^{-1}(K)$$","Ideal.map_le_iff_le_comap",""
+"设 $S$ 是 $R$-代数。对于理想 $p \subseteq R$ 和 $P \subseteq S$，称 **$P$ 位于 $p$ 之上**（$P$ lies over $p$），是指 $p$ 是 $P$ 在 $R$ 中的原像：
+$$p = f^{-1}(P)$$
+其中 $f: R \to S$ 是代数结构映射。","Ideal.LiesOver.over",""
+"收缩映射的单调性","Ideal.comap_mono",""
+"设 $R$ 为环，$I, \mathfrak{p}$ 为其理想。若 $\mathfrak{p}$ 是素理想且满足 $I \subseteq \mathfrak{p}$，则 $\mathfrak{p}$ 在商环 $R/I$ 中的像（即扩张理想 $\mathfrak{p} \cdot (R/I)$）也是素理想。","","Quotient.mk_surjective, Ideal.map_isPrime_of_surjective"
+"生成空间的秩受限于生成集的基数","Submodule.spanRank_span_le_card",""
+"设 $\mathfrak{p}$ 为环 $R$ 中的一个具有有限高度的素理想。则在 $R$ 的素谱 $\operatorname{Spec}(R)$ 中，存在一条长度恰好等于 $\operatorname{ht}(\mathfrak{p})$ 且以 $\mathfrak{p}$ 为终点的严格递增素理想链：
+$$ \mathfrak{p}_0 \subsetneq \mathfrak{p}_1 \subsetneq \dots \subsetneq \mathfrak{p}_n = \mathfrak{p} $$
+其中 $n = \operatorname{ht}(\mathfrak{p})$。","","Ideal.height_eq_primeHeight, Ideal.height_ne_top, Order.exists_series_of_height_eq_coe"
+"满射诱导的理想格序同构","Ideal.relIsoOfSurjective",""
+"设 $\alpha, \beta$ 为预序集。若 $e : \alpha \simeq \beta$ 是一个**序同构**，则 $e$ 是**严格单调**的。","OrderIso.strictMono",""
+"对环 $R$ 中的素理想链 $l$ 的长度进行归纳。","","RelSeries.singleton, RelSeries.tail, RelSeries.cons, RelSeries.toList_injective"
+"设 $S$ 是交换环 $R$ 上的代数。称 $S$ 满足**下降性质**（Going-Down property），是指：
+
+对于 $R$ 中的任意素理想 $p$ 和 $S$ 中的任意素理想 $Q$，若 $p$ 严格包含在 $Q$ 对应的底理想中（即 $p \subsetneq Q \cap R$），则存在 $S$ 中的素理想 $P$ 满足：
+1. $P \subseteq Q$；
+2. $P$ 位于 $p$ 之上（即 $P \cap R = p$）。","Algebra.HasGoingDown",""
+"设 $S$ 是满足**下降性质**（Going-Down property）的 $R$-代数。若有 $R$ 中的素理想 $p \subsetneq q$，且 $Q$ 是 $S$ 中位于 $q$ 之上的素理想，则存在 $S$ 中的素理想 $P$ 满足：
+1. $P \subsetneq Q$；
+2. $P$ 位于 $p$ 之上（即 $P \cap R = p$）。","Ideal.exists_ideal_lt_liesOver_of_lt",""
+"设 $\alpha$ 是预序集，$p$ 是 $\alpha$ 中的一条**小于链**（LTSeries），$x \in \alpha$。若该链的末端元素小于等于 $x$（即 $\text{last}(p) \le x$），则该链的长度不大于 $x$ 的**高**（height）：
+$$\text{length}(p) \le \text{ht}(x)$$","Order.length_le_height",""
+"在局部环中，Krull 维数定义为极大理想的高度。","IsLocalRing.maximalIdeal_height_eq_ringKrullDim",""
+"设 $(R, \mathfrak{m})$ 为诺特局部环，$k = R/\mathfrak{m}$ 为其剩余域。记 $\dim R$ 为其 Krull 维数，$\dim_k(\mathfrak{m}/\mathfrak{m}^2)$ 为其嵌入维数。设 $n = \dim_k(\mathfrak{m}/\mathfrak{m}^2)$。选取余切空间 $\mathfrak{m}/\mathfrak{m}^2$ 的一组基 $\{b_1, \dots, b_n\}$。利用商映射的满射性，在极大理想 $\mathfrak{m}$ 中选取元素 $\{x_1, \dots, x_n\}$，使得其在 $\mathfrak{m}/\mathfrak{m}^2$ 中的像恰好为这组基。","","Module.finBasis, Ideal.toCotangent_surjective"
+"设 $(R, \mathfrak{m})$ 为诺特局部环，$k = R/\mathfrak{m}$ 为其剩余域。记 $\dim R$ 为其 Krull 维数，$\dim_k(\mathfrak{m}/\mathfrak{m}^2)$ 为其嵌入维数。设 $n = \dim_k(\mathfrak{m}/\mathfrak{m}^2)$。选取余切空间 $\mathfrak{m}/\mathfrak{m}^2$ 的一组基 $\{b_1, \dots, b_n\}$。利用商映射的满射性，在极大理想 $\mathfrak{m}$ 中选取元素 $\{x_1, \dots, x_n\}$，使得其在 $\mathfrak{m}/\mathfrak{m}^2$ 中的像恰好为这组基。证明 $\{x_i\}$ 在余切空间中的像生成了整个 $k$-向量空间 $\mathfrak{m}/\mathfrak{m}^2$。这是由于它们被选为一组基。","Submodule.span_eq",""
+"设 $(R, \mathfrak{m})$ 为诺特局部环，$k = R/\mathfrak{m}$ 为其剩余域。在局部环中，如果一组元素生成的向量空间是 $\mathfrak{m}/\mathfrak{m}^2$ 的生成集，则这组元素本身生成了整个 $R$-模 $\mathfrak{m}$。","CotangentSpace.span_image_eq_top_iff",""
+"设 $M$ 是半环 $R$ 上的模，$s \subseteq M$ 是一个有限集。则由 $s$ 生成的子模 $\text{span}(s)$ 的**有限生成秩**（span finrank）不大于 $s$ 的基数：
+$$\text{finrank}(\text{span}(s)) \le |s|$$","Submodule.spanFinrank_span_le_ncard_of_finite",""
+"设 $f: A \to B$ 是诺特局部环之间的平坦局部同态。若 $A$ 和纤维环 $B/\mathfrak{m}_A B$ 均是正则局部环，则 $B$ 也是正则局部环。 由 $A$ 和 $B/I$ 的正则性，它们的嵌入维数分别等于其 Krull 维数。","IsRegularLocalRing.reg",""
+"设 $f: A \to B$ 是诺特局部环之间的平坦局部同态。若 $A$ 和纤维环 $B/\mathfrak{m}_A B$ 均是正则局部环，则 $B$ 也是正则局部环。取 $\mathfrak{m}_A$ 的生成元 $x_A$，映入 $B$ 得到 $f(x_A)$ 生成 $I$。","","Module.Free.chooseBasis, Ideal.toCotangent_surjective"
+"设 $f: A \to B$ 是诺特局部环之间的平坦局部同态。若 $A$ 和纤维环 $B/\mathfrak{m}_A B$ 均是正则局部环，则 $B$ 也是正则局部环。取 $\mathfrak{m}_{B/I}$ 的生成元 $y_F$，提升回 $B$ 得到 $y_B$。","Ideal.Quotient.mk_surjective",""
+"设 $f: A \to B$ 是诺特局部环之间的平坦局部同态。若 $A$ 和纤维环 $B/\mathfrak{m}_A B$ 均是正则局部环，则 $B$ 也是正则局部环。取 $\mathfrak{m}_A$ 的生成元 $x_A$，映入 $B$ 得到 $f(x_A)$ 生成 $I$。取 $\mathfrak{m}_{B/I}$ 的生成元 $y_F$，提升回 $B$ 得到 $y_B$。**合并生成元**：证明 $\mathfrak{m}_B$ 由 $\{f(x_A)\} \cup \{y_B\}$ 生成。","","Ideal.span_union, Ideal.map_span"
+"设 $f: A \to B$ 是诺特局部环之间的平坦局部同态。若 $A$ 和纤维环 $B/\mathfrak{m}_A B$ 均是正则局部环，则 $B$ 也是正则局部环。 $\mathfrak{m}_B$ 的生成元个数不超过 $A$ 的嵌入维数与 $B/I$ 的嵌入维数之和。
+    即 $\dim_k(\mathfrak{m}_B/\mathfrak{m}_B^2) \le \dim(A) + \dim(B/I)$。","finrank_le_of_span_eq_top",""
